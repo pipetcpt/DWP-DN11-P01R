@@ -10,7 +10,7 @@ mainfont: NanumGothic
 ---
 
 ```{r, setup, include=FALSE}
-knitr::opts_knit$set(root.dir = '~/Github/DWP-DN11-P01R')
+knitr::opts_knit$set(root.dir = '/Users/NOHYOONJI/Documents/GitHub/DWP-DN11-P01R')
 ```
 
 ```{css, echo = FALSE}
@@ -113,7 +113,7 @@ grViz("digraph flowchart {
 
 ### 11.2 시험대상자의 인구학적 정보 및 특성
 
-인구통계학적 정보는 임상시험에 참여하여 대상자번호를 부여 받은 모든 자를 대상으로 하였다. 대상자는 남성 `r n_distinct(DM_set %>% filter(SEX==1))`명, 여성 `r n_distinct(DM_set %>% filter(SEX==2))`명이었으며, 연령`r round(mean(DM_set$AGE), 2)` ± `r round(sd(DM_set$AGE), 2)`세(시험군: `r round(mean(DM_set$AGE[DM_set$IP=="T"]), 2)`± `r round(sd(DM_set$AGE[DM_set$IP=="T"]), 2)`세, 대조군: `r round(mean(DM_set$AGE[DM_set$IP=="R"]), 2)` ± `r round(sd(DM_set$AGE[DM_set$IP=="R"]), 2)`세), 신장 `r round(mean(DM_set$HT), 2)` ± `r round(sd(DM_set$HT), 2)` cm(시험군: `r round(mean(DM_set$HT[DM_set$IP=="T"]), 2)` ± `r round(sd(DM_set$HT[DM_set$IP=="T"]), 2)`cm, 대조군: `r round(mean(DM_set$HT[DM_set$IP=="R"]), 2)`  ± `r round(sd(DM_set$HT[DM_set$IP=="R"]), 2)`cm), 체중 `r round(mean(DM_set$WT), 2)` ± `r round(sd(DM_set$WT), 2)`kg(시험군:  `r round(mean(DM_set$WT[DM_set$IP=="T"]), 2)`± `r round(sd(DM_set$WT[DM_set$IP=="T"]), 2)`kg, 대조군: `r round(mean(DM_set$WT[DM_set$IP=="R"]), 2)` ± `r round(sd(DM_set$WT[DM_set$IP=="R"]), 2)`kg)이었다. 활력징후 및 임상실험실검사 결과는 모두 정상이거나 임상적으로 유의하지 않은 범위에 포함되었다. 
+인구통계학적 정보는 임상시험에 참여하여 대상자번호를 부여 받은 모든 자를 대상으로 하였다. 대상자는 남성 `r n_distinct(DM_set %>% filter(SEX==1))`명, 여성 `r n_distinct(DM_set %>% filter(SEX==2))`명이었으며, 연령`r round(mean(DM_set$AGE), 2)` ± `r round(sd(DM_set$AGE), 2)`세, 신장 `r round(mean(DM_set$HT), 2)` ± `r round(sd(DM_set$HT), 2)` cm, 체중 `r round(mean(DM_set$WT), 2)` ± `r round(sd(DM_set$WT), 2)`kg이었다. 활력징후 및 임상실험실검사 결과는 모두 정상이거나 임상적으로 유의하지 않은 범위에 포함되었다. 
 임상시험에 참여한 대상자들의 인구학적 기본정보는 Table 2 ~ 3에 요약하였고, 모든 대상자의 관찰 값은 Appendix 16.2.4에 제시하였다.
 
 <br/>
@@ -122,8 +122,10 @@ grViz("digraph flowchart {
 table2%>%
   kable(booktabs = T, caption = "Table 2. Subject demographics and baseline characteristics summary (at screening, continuous variables)", escape = FALSE) %>%
   kable_styling(full_width = F, latex_options = "striped", table.envir = "ctable") %>%
-  group_rows("Demographics", 1, 4) %>%
-  group_rows("Vital sign", 5, 8) %>%
+  group_rows("Demographics", 1, 3) %>%
+  group_rows("Vital sign", 4, 7) %>%
+  group_rows("ECG", 8,12) %>% 
+  group_rows("Ophthalmologic test",13,20) %>% 
   row_spec(0, bold = T, color = "black", background = "lightgray")
 ```
 
@@ -131,169 +133,17 @@ table2%>%
 <br/>
 
 ```{r table3, echo = FALSE, fig.cap = "Table 3. Subject Demographics and baseline characteristics summary (continuous variables)"}
-table3 <-
-  kable(booktabs = T, caption = "Table 3. Subject Demographics and baseline characteristics summary (continuous variables)") %>%
+table3 %>%   
+  kable(booktabs = T, caption = "Table 3. Subject Demographics and baseline characteristics summary (continuous variables)",escape=FALSE) %>%
   kable_styling(full_width = F, latex_options = "striped", table.envir = "ctable") %>%
-  group_rows("Medical histroy", 1,2) %>%
+  group_rows("Medical histroy", 1,2) %>%  
   group_rows("Affected organ systems in subjects having medical history", 3,29) %>% 
   group_rows("Affected organ systems in subjects having abnormality(ies) in physical examination", 30,44) %>% 
   group_rows("Lifestyle ~Smoking", 45,46) %>% 
-  group_rows("Lifestyle ~ Alcohol consumption", 47,48) %>%
-  group_rows("Lifestyle ~ Caffeine consumption", 49,50) %>%
-  column_spec(column = 2:4, width = "1.2in") %>%
-  row_spec(0, bold = T, color = "black", background = "lightgray") 
- 
+  group_rows("Lifestyle ~ Alcohol consumption", 47,48) %>% 
+  group_rows("Lifestyle ~ Caffeine consumption", 49,50) 
+  #column_spec(column = 2:4, width = "1.2in") %>%
+  #row_spec(0, bold = T, color = "black", background = "lightgray") 
 
 ```
-
-<br/>
-<br/>
-
-#### 11.2.1 병력
-
-스크리닝 검사를 받은 모든 대상자의 병력은 시험담당자가 문진 하였으며, 제외기준에 해당하지 않는 대상자를 임상시험에 등록하였다. 대상자의 병력은 MedDRA Ver. 24.1의 System Organ Class, PT를 기준으로 표준화 하여 Appendix 16.4.3에 제시하였다.
-
-<br/>
-
-#### 11.2.2. 선행약물
-
-본 시험은 건강한 성인 자원자 대상의 임상시험으로, 제외기준에 의하여 선행약물을 복용한 대상자는 임상시험에 참여할 수 없었으므로 선행약물을 복용한 대상자는 없었다.
-
-<br/>
-
-#### 11.2.3. 병용약물
-
-임상시험용의약품 투여 후 병용약물을 투여한 대상자는 없었다.
-
- <!-- 임상시험의약품과 약동학적 상호작용이 없는 약물로 시험 진행 가능할 것으로 판단하여 임상시험 지속하였고, 병용약물은 ATC/DDD Index 2022 Level 1(Anatomic Main Group), Level 2(Therapeutic Main Group), Level 3(Therapeutic Sub Group), Level 4(Chemical/Therapeutic Sub Group), 그리고 Level 5(Chemical Substance)의 5개의 그룹으로 분류하여 각 범주 별 대상자 수 및 건수를 기술하였다.  개별 대상자의 병용약물은 Appendix 16.4.1에 제시하였다.  -->
-
-<br/>
-<br/>
-
-
-### 11.3 투여 순응도 평가
-
-임상시험에 참여한 모든 대상자(중도탈락자 1명 제외)는 계획서에 정해진 바에 따라 투약을 완료하였다. 순응도 평가를 위해 시험책임자 또는 공동시험자가 직접 임상시험용의약품을 투약하였고, 복용 확인을 위하여 구강검사를 시행하였다. 대상자별 개별 투약시간은 Appendix 16.2.5.1에 제시하였다.
-
-<br/>
-<br/>
-
-### 11.4 약동학 결과 및 개별 시험 대상자의 자료
-
-#### 11.4.1. 약동학 결과분석
-
-실제 관측된 투여 후 시간대 별 농도의 평균값은 Figure 2에, 투여군별 약동학적 파라미터는 Table 4에 제시하였다. 개별 대상자의 시간대별 혈장 농도 결과는 Appendix 16.2.5.2 ~ 16.2.5.3에 제시하였으며, 약동학 파라미터는 Appendix 16.2.7.1에 제시하였다. 또한 개별 대상자의 시간-약물농도 곡선은 Appendix 16.2.7.2에 제시하였다.
-
-<br/>
-
-
-##### **11.4.1.1. 비구획 분석 결과 - Niclosamide**
-
-```{r pk, echo = FALSE, warning = FALSE}
-source('CSR/R/pk.R')
 ```
-
-최고혈중농도(C~max~)는 대조약의 경우 `r table4[2, 2]`± `r table4[2, 3]` ng/mL 이었고, 시험약의 경우 `r table4[2, 7]` ± `r table4[2, 8]` ng/mL 이었다. 혈장농도 시간곡선하 면적(AUC~last~)은 대조약의 경우 `r table4[1, 2]`±`r table4[1, 3]` hr×ng/mL 이었고, 시험약의 경우  `r table4[1, 7]`±`r table4[1, 8]` hr×ng/mL 이었다.
-
-
-```{r Figure2,  fig.cap = '**Figure 2. Mean Plasma Concentration of Niclosamide** <br /> A : linear scale, B: Log scale', out.width = "85%", fig.align = "center"}
-knitr::include_graphics('CSR/figures/figure2.png')
-```
-
-```{r Table4, fig.cap = 'PK parameters for Niclosamide'}
-table4 %>%
-  kable(booktabs = T, caption = "Table 4. PK parameters for Niclosamide") %>%
-  kable_styling(full_width = F, latex_options = "striped", table.envir = "ctable", bootstrap_options = c("striped", "hover", "condensed")) %>%
-  add_header_above(c(" ", "R" = 5, "T" = 5))  %>%
-  row_spec(0, bold = T, color = "black", background = "lightgray")
-```
-<br />
-<br />
-<br />
-
-
-##### **11.4.1.2. 비구획 분석 결과 - 3-hydroxy-niclosamide**
-
-
-최고혈중농도(C~max~)는 대조약의 경우 `r table5[2, 2]`± `r table5[2, 3]` ng/mL 이었고, 시험약의 경우 `r table5[2, 7]` ± `r table5[2, 8]` ng/mL 이었다. 혈장농도 시간곡선하 면적(AUC~last~)은 대조약의 경우 `r table5[1, 2]`±`r table5[1, 3]` hr×ng/mL 이었고, 시험약의 경우  `r table5[1, 7]`±`r table5[1, 8]` hr×ng/mL 이었다.
-
-
-
-```{r Figure3,  fig.cap = '**Figure 3. Mean Plasma Concentration of 3-hydroxy-niclosamide** <br /> A : linear scale, B: Log scale', out.width = "85%", fig.align = "center"}
-knitr::include_graphics('CSR/figures/figure3.png')
-```
-
-<br />
-<br />
-
-```{r Table5, fig.cap = 'PK parameters for 3-hydroxy-niclosamide'}
-table5 %>%
-  kable(booktabs = T, caption = "Table 5. PK parameters for 3-hydroxy-niclosamide") %>%
-  kable_styling(full_width = F, latex_options = "striped", table.envir = "ctable", bootstrap_options = c("striped", "hover", "condensed")) %>%
-  add_header_above(c(" ", "R" = 5, "T" = 5))  %>%
-  row_spec(0, bold = T, color = "black", background = "lightgray")
-```
-
-<br />
-<br />
-
-#### 11.4.2. 통계학적 문제
-
-본 시험의 통계 처리는 9.7 항 및 통계분석계획서에 따라 실시 하였다. 
-
-<br />
-
-##### 11.4.2.1. 공변량 (Covariates)에 대한 보정
-
-해당 사항 없음
-
-<br />
-
-##### 11.4.2.2. 중도탈락자(Dropouts) 또는 결측치 (Missing Data)의 처리
-
-본 임상시험에 참여한 `r table1[2, 2]`의 대상자 중 임상시험용의약품을 투여받고 약동학적 채혈을 완료한 `r table1[10, 2]`명의 대상자에 대해서 분석을 진행하였으며 모든 Sample에서 측정한 농도가 최소 정량한계 농도 (LLOQ) 미만인 대상자이거나 실제 채혈을 시행하지 않았거나 (not applicable) 또는 검체가 누락된 경우 (missing sample)에는 의약품 농도값을 분석에서 제외하였다.  단, T~max~ 이전에 혈중 농도가 검출되지 않거나 최소정량한계 미만인 경우 0으로 간주하였고, T~max~ 이후 검출되지 않거나 최소정량한계 미만일 경우 blank로 처리하여 AUC~last~를 산출하였다. 
-
-<br />
-
-
-##### 11.4.2.3.	중간분석(Interim Analysis) 및 Data 모니터링
-해당 사항 없음
-
-<br />
-
-##### 11.4.2.4.	다기관 공동 임상시험(Multicenter Studies)
-해당 사항 없음
-
-<br />
-
-##### 11.4.2.5.	다중비교(Multiple Comparison) 또는 검정의 다중성 (Multiplicity)
-해당 사항 없음
-
-<br />
-
-#### 11.4.3. 피험자별 결과 자료의 제시
-
-개별 대상자의 시간대별 혈장 농도 결과는 Appendix 16.2.5.2 ~ 16.2.5.3 에 제시하였으며. 개별 대상자의 시간-약물농도 곡선은 Appendix 16.2.7.2에 제시하였다.
-
-<br />
-
-#### 11.4.4.	투여 용량, 약물 농도 및 반응과의 관계
-해당사항 없음
-
-<br />
-
-#### 11.4.5.	약물-약물 및 약물-질병 간의 상호작용
-해당 사항 없음
-
-<br />
-
-#### 11.4.6.	약동학 평가 결론
-
-약동학적 평가 결과, 대조약(6명)과 시험약(10명) 투여 후 얻은 Niclosamide의 AUC~last~는 각각 `r table4[1, 2]`±`r table4[1, 3]` hr×ng/mL, `r table4[1, 7]`±`r table4[1, 8]` hr×ng/mL이었고, C~max~는 각각  `r table4[2, 2]`± `r table4[2, 3]` ng/mL,`r table4[2, 7]` ± `r table4[2, 8]` ng/mL 이었다. 
-
-Niclosamide가 대조약에 `r doseR`mg, 시험약에 `r doseT`mg 포함되어 있음을 고려하여 용량으로 표준화하면 대조약 대비 시험약의 AUC~last~와 C~max~는 각각 약 `r round(table4[1, 7]/table4[1, 2]*doseR/doseT, 2)` 배,  `r round(table4[2, 7]/table4[2, 2]*doseR/doseT, 2)`배 증가하였다. Niclosamide의 대사물질인 3-hydroxyniclosamide도 역시 용량으로 표준화하여 비교하였을 때 대조약 대비 시험약의 AUC~last~와 C~max~는 각각  `r round(table5[1, 7]/table5[1, 2]*doseR/doseT, 2)` 배,  `r round(table5[2, 7]/table5[2, 2]*doseR/doseT, 2)`배 증가하였음을 볼 수 있었다. 
-
-
-Niclosamide의 T~max~는 대조약과 시험약이 각각 `r paste0(table4[3, 4], "(", table4[3, 5], "-", table4[3, 6], ")")`hr, `r paste0(table4[3, 9], "(", table4[3, 10], "-", table4[3, 11], ")")`hr로 비슷한 값을 보였고 3-hydroxyniclosamide의 경우도 마찬가지로 비슷하였다.  
- 
-
