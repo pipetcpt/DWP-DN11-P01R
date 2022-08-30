@@ -52,6 +52,9 @@ table1_names <- read.csv("CSR/Table/Table1.csv", stringsAsFactors = F, header = 
 table1 <- data.frame(table1_names, N = c(Scr, ScrF, Allo, dropout))
 
 table1
+#table1 <-data.frame(table1)
+#write.csv(table1, "table1.csv")
+
 
 #### Table 2 ####
 # code reference : https://cran.r-project.org/web/packages/qwraps2/vignettes/summary-statistics.html
@@ -79,17 +82,19 @@ EYE_iop <- EYE_iop %>%
   mutate (IOPOS_v1 =  ifelse(is.na(EYE_2$IOPOS[EYE_2$IOPNUM == "중앙값"]), EYE_2$IOPOS[EYE_2$IOPNUM=="평균"], EYE_2$IOPOS[EYE_2$IOPNUM == "중앙값"]))
 
 
-EYE <- left_join(EYE, EYE_iop, by= "SUBJID")
+EYE <- left_join(EYE, EYE_iop, by= "SUBJID") %>% 
+  filter(VISIT == 1 & IOPNUM== "평균")  #필요한 데이터가 모두 같으므로 하나만 뽑아오기 
 
 DM_set <- left_join(DM, LS, by = c("SUBJID","VISIT"))%>%
   left_join(.,VS, by = c("SUBJID","VISIT")) %>% 
   left_join(.,EG, by = c("SUBJID","VISIT"))%>% 
   left_join(.,EYE, by = c("SUBJID","VISIT")) %>%
   left_join(.,Anal_set,  by = c("SUBJID" = "SID")) %>%
-  select(SUBJID,VISIT,AGE,SEX,HT,WT,LSSMKYN, LSAHOLYN, LSCAFFYN,SYSBP,DIABP,PULSE,TEMP,EGHR, EGPR, EGQRS, EGQT, EGQTC,OD_v1, OS_v1, IOPOD_v1, IOPOS_v1,
-         TBUTOD, TBUTOS, SCHOD, SCHOS, DS,SS,PS,SUBJID)%>%
+  select(SUBJID,VISIT,AGE,SEX,HT,WT,LSSMKYN, LSAHOLYN, LSCAFFYN,SYSBP,DIABP,PULSE,TEMP,EGHR, EGPR, EGQRS, EGQT, EGQTC,OD_v1, OS_v1,
+         IOPOD_v1,IOPOS_v1,TBUTOD, TBUTOS, SCHOD, SCHOS, DS,SS,PS,SUBJID)%>%
   filter(DS==1) 
 
+DM_set$PULSE <-as.numeric(DM_set$PULSE)
 
 summary_dm <-
   list("Demographics" = 
@@ -124,8 +129,10 @@ summary_dm <-
 
        
        
-table2 <-summary_table(DM_set, summary_dm) 
-
+table2 <-summary_table(DM_set, summary_dm)
+#table2 <-data.frame(table2)
+table2
+#write.csv(table1, "table2.csv")
 
 
 #### Table 3 ####
@@ -201,4 +208,8 @@ summary_mh <-
   )
 
 table3 <-summary_table(MH_set,summary_mh)
-table3        
+#table3    
+table3 <-data.frame(table3)
+table3
+#write.csv(table1, "table3.csv")
+
