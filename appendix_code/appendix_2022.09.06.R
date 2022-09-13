@@ -57,8 +57,6 @@ subid <- subid %>% select(SID, RID)
 VST <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<visit\\>", data.files)]), NULL))
 VST$VISIT_CODE <- as.integer(VST$VISIT_CODE)
 VST$VISIT_LABEL <- as.character(VST$VISIT_LABEL)
-#VST$VISIT_LABEL <- VST$VISIT_LABEL %>% 
-#  factor(levels = c("동의 취득","Screening  Visit","입원일(-1d)","투여일(1d)","투여일(2d)","투여일(3d)","투여일(4d)","투여일(5d)","UV1","UV2","UV3","UV4","UV5","UV6","UV7","UV8","UV9","UV10","UV11","UV12","UV13","UV14"))
 
 
 #16.2.1 중도탈락자
@@ -171,11 +169,23 @@ MyFTable_16.2.4 <- flex.table.fun(DMSVLS)
 
 # 16.2.5.1 ###시험대상자별 투약시간
 RN <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<rn\\>", data.files)]), NULL))
-dosingtime <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ip\\>", data.files)]), NULL))%>% 
-  select(1,4,7) %>% 
-  left_join(RN, by="SUBJID") %>%
-  select(SID=SUBJID, RID=RNNO, "투여일"=IPDTC, "투여시간"=IPTC)
- MyFTable_16.2.5.1 <- flex.table.fun(dosingtime)
+IP0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ip\\>", data.files)]), NULL))
+IP0 <- visit.match.fun(infile = IP0, visitData = VST)
+
+IP <- IP0 %>% 
+  left_join(RN[,c(1,5)], by = "SUBJID") %>% 
+  mutate(scheduled = paste(VISIT,IPNUM, sep="_")) %>% 
+  select(SID=SUBJID, RID=RNNO,scheduled, done = IPTC) %>% 
+  spread(key=scheduled, value =done)
+
+MyFTable_16.2.5.1 <- flex.table.fun(IP)
+
+# dosingtime <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ip\\>", data.files)]), NULL))%>% 
+#   select(1,4,7) %>% 
+#   left_join(RN, by="SUBJID") %>%
+#   select(SID=SUBJID, RID=RNNO, "투여일"=IPDTC, "투여시간"=IPTC)
+#  MyFTable_16.2.5.1 <- flex.table.fun(dosingtime)
+ 
 # 
 # #16.2.5.2 시험대상자별 혈장 내 농도
 # if(!require(readxl)) install.packages("readxl");library(readxl) 
@@ -901,7 +911,7 @@ MyFTable_16.4.8.10 <- flex.table.fun(
 ##############################
 ###       Doc & Table      ###
 ##############################
-
+#doc <- read_docx(path = "/Users/NOHYOONJI/Documents/GitHub/Template/Template.docx")
 doc <- read_docx(path = "C:/Users/Owner/Documents/GitHub/Template/Template.docx")
 doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #1
 doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #2
@@ -974,12 +984,12 @@ doc <- body_add_par(doc, "시험대상자 특성표", style = "heading 3") #16.2
 doc <- body_add_flextable(doc, MyFTable_16.2.4)
 doc <- body_add_break(doc)
 
-
+doc <- body_end_section_continuous(doc) # 가로 시작
 doc <- body_add_par(doc, "순응도 및 혈중농도 자료", style = "heading 3") #16.2.5
 doc <- body_add_par(doc, "16.2.5.1 시험대상자별 개별 투약 시간", style="rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.2.5.1)
 doc <- body_add_break(doc)
-
+doc <- body_end_section_landscape(doc) #가로 끝
 
 doc <- body_add_par(doc, "16.2.5.2 시험대상자별 혈장 내 농도 (Period 1 Tamsulosin)", style="rTableLegend")
 doc <- body_add_break(doc)
