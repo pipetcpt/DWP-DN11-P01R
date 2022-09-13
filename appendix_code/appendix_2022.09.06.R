@@ -171,11 +171,11 @@ MyFTable_16.2.4 <- flex.table.fun(DMSVLS)
 
 # 16.2.5.1 ###시험대상자별 투약시간
 RN <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<rn\\>", data.files)]), NULL))
-# dosingtime <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ip\\>", data.files)]), NULL))%>% 
-#   select(1,5,6) %>% 
-#   left_join(RN, by="SUBJID") %>%
-#   select(SID=SUBJID, RID=RNNO, "투여일"=IPDTC, "투여시간"=IPTC)
-# MyFTable_16.2.5.1 <- flex.table.fun(dosingtime)
+dosingtime <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ip\\>", data.files)]), NULL))%>% 
+  select(1,4,7) %>% 
+  left_join(RN, by="SUBJID") %>%
+  select(SID=SUBJID, RID=RNNO, "투여일"=IPDTC, "투여시간"=IPTC)
+ MyFTable_16.2.5.1 <- flex.table.fun(dosingtime)
 # 
 # #16.2.5.2 시험대상자별 혈장 내 농도
 # if(!require(readxl)) install.packages("readxl");library(readxl) 
@@ -977,7 +977,7 @@ doc <- body_add_break(doc)
 
 doc <- body_add_par(doc, "순응도 및 혈중농도 자료", style = "heading 3") #16.2.5
 doc <- body_add_par(doc, "16.2.5.1 시험대상자별 개별 투약 시간", style="rTableLegend")
-#doc <- body_add_flextable(doc, MyFTable_16.2.5.1)
+doc <- body_add_flextable(doc, MyFTable_16.2.5.1)
 doc <- body_add_break(doc)
 
 
@@ -1300,4 +1300,4 @@ doc <- body_add_break(doc)
 
 
 appendix.name <- strsplit(getwd(), "/")[[1]][6]
-print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_v2.docx"))
+print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_add_table.docx"))
