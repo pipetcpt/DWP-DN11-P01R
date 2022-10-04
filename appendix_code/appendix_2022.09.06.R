@@ -34,7 +34,7 @@ list.files('sasdata')
 
 ######### FUNCTIONS #########
 source('appendix_code/function/count.mean.sd.r')
-source('appendix_code/function/createtable.r')
+source('appendix_code/function/createtable_v2.r')
 source('appendix_code/function/flextable.r')
 source('appendix_code/function/others.r')
 
@@ -57,15 +57,19 @@ subid <- subid %>% select(SID, RID)
 VST <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<visit\\>", data.files)]), NULL))
 VST$VISIT_CODE <- as.integer(VST$VISIT_CODE)
 VST$VISIT_LABEL <- as.character(VST$VISIT_LABEL)
-
+#VST$VISIT_LABEL <- VST$VISIT_LABEL %>% 
+#  factor(levels = c("동의취득","Screening Visit","입원일(-1d)","투여일(1d)","투여일(2d)","투여일(3d)","투여일(4d)","투여일(5d)",
+#                    "UV1","UV2","UV3","UV4","UV5","UV6","UV7","UV8","UV9","UV10","UV11","UV12","UV13","UV14","이상반응","병용약물","시험종료","시험책임자 서명"))
 
 #16.2.1 중도탈락자
 DS0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ds\\>", data.files)]), NULL))
 DM0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<dm\\>", data.files)]), NULL))
 
 DS <- DS0 %>%
+  left_join(RN[,c(1,5)], by = "SUBJID") %>%
   filter(DSYN == 2) %>%
   mutate(SID = SUBJID,
+         RID = RNNO,
          Final_visit = DSDODTC,
          Reason_for_discontinuation = case_when(DSREAS == 1 ~ "스크리닝 탈락",
                                                 DSREAS == 2 ~ "대상자가 임상시험용 의약품의 안전성이나 약동학적 특성을 평가하는데 영향을 줄 것으로 예상되는 의약품을 투약한 경우",
@@ -74,7 +78,7 @@ DS <- DS0 %>%
                                                 DSREAS == 5 ~ "임상시험 중 선정/제외 기준 등 중대한 계획서 위반 사항이 새롭게 발견되는 경우",
                                                 DSREAS == 6 ~ "시험자가 시험을 중지하여야 한다고 판단한 경우",
                                                 DSREAS == 7 ~ "기타")) %>%
-  select(SID, Reason_for_discontinuation, Final_visit) %>%
+  select(SID, RID, Reason_for_discontinuation, Final_visit) %>%
   arrange(SID)
 
 DM <- DM0 %>%
@@ -88,6 +92,7 @@ DM <- DM0 %>%
 
 data <- merge(DS, DM, by="SID")
 data <- data[,c("SID", 
+                "RID",
                 "Sex", 
                 "Age", 
                 "Final_visit", 
@@ -217,20 +222,18 @@ MyFTable_16.2.5.1 <- flex.table.fun(IP)
 ################################################################################################################
 
 #16.2.6.5  ###시험대상자별 채혈수행시각
-
 pb0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<pb\\>", data.files)]), NULL))
 pb0 <- visit.match.fun(infile = pb0, visitData = VST)
 pb <- pb0 %>% 
-  filter(!SEQ == 2) %>% 
   left_join(RN[,c(1,5)], by="SUBJID") %>%
-  mutate(scheduled1=parse_number(PBNT), scheduled2=paste(scheduled1,'hr',sep=""), scheduled=paste(VISIT,scheduled2,sep="_")) %>%
+  mutate(scheduled1=ifelse(PBNT %in% c("첫 투여 직전 (0 h)","마지막 투여 직전 (0 h)"), PBNT,parse_number(PBNT))) %>%
+  mutate(scheduled2=paste(scheduled1,'hr',sep=""), scheduled=paste(VISIT,scheduled2,sep="_")) %>%
   select(SID=SUBJID, RID=RNNO, scheduled, done=PBAT) %>%
   spread(key=scheduled, value=done) 
 
+MyFTable_16.2.6.5.1 <- flex.table.fun(pb %>% select(1,2,10,3, 4, 6, 5, 7:9))
 
-MyFTable_16.2.6.5.1 <- flex.table.fun(pb %>% select(1,2,5,3,4,7,6,8:10))
-
-MyFTable_16.2.6.5.2 <- flex.table.fun(pb %>% select(1,2,13,11,12,15,14,16:19))
+MyFTable_16.2.6.5.2 <- flex.table.fun(pb %>% select(1,2,20,19,11,12,14,13,15:19))
 
 
 # 16.2.7 AE-  시험대상자별 이상반응 목록
@@ -391,6 +394,7 @@ MyFTable_16.4.1 <- flex.table.fun(subCM)
 LB0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<lb\\>", data.files)]), NULL))
 
 LB <- LB0 %>% 
+  filter(SUBJID %in% c("S01","S02","S04","S07","S09","S10","S11","S15")) %>% 
   mutate(SID = SUBJID,
          LBTEST = case_when(endsWith(LBTEST, "-GT") ~ "GGT",
                           TRUE ~ as.character(LBTEST))) %>%
@@ -417,7 +421,6 @@ name_map <- data.frame(rbind(
   c("MCHC", "MCHC"),
   
  
-  
   # blood chemistry test
   c("Glucose", "Glucose"),
   c("BUN", "BUN"),
@@ -441,14 +444,11 @@ name_map <- data.frame(rbind(
   )
   )
   
-  
-
 colnames(name_map) <- c("AnalyteName", "Fullname")
 
 MyFTable_16.4.2.1To16.4.2.33 <- list()
 filter_var <- "TEST"
 value_var <- "RES"
-
 
 for(i in 1:length(name_map$AnalyteName)){
   MyFTable_16.4.2.1To16.4.2.33[[i]] <- flex.table.fun(
@@ -461,14 +461,14 @@ for(i in 1:length(name_map$AnalyteName)){
                         type_      = "numeric"),
     
     calc_ = TRUE)
-  
+  data[is.na(data)] <- "-"
   print(paste("Creating Table for", name_map$Fullname[i], "on subject code"))
 }
 
 length(name_map$AnalyteName) #32
-MyFTable_16.4.2.1To16.4.2.33[[24]]
 
-#####
+
+####
 # for(i in 1:13){
 #   data = create.table(csvfile  = LB,
 #                     code_id    = name_map$AnalyteName[i],
@@ -484,7 +484,7 @@ MyFTable_16.4.2.1To16.4.2.33[[24]]
 #       count.mean.sd.list$names_[j],
 #       unlist(count.mean.sd.list$list_[j])))
 #    }
-#   data[is.na(data)] <- "NA"
+#   data[is.na(data)] <- "-"
 # 
 # }
 # 
@@ -504,10 +504,14 @@ MyFTable_16.4.2.1To16.4.2.33[[24]]
 #       count.mean.sd.list$names_[j],
 #       unlist(count.mean.sd.list$list_[j])))
 #   }
-#   data[is.na(data)] <- "NA"
+#   data[is.na(data)] <- "-"
 # 
 # }
-#####
+####
+
+#check
+MyFTable_16.4.2.1To16.4.2.33[[1]]
+
 
  #16.4.2.34 ~ 16.4.2.46
 # Main 
@@ -553,19 +557,19 @@ for(i in 1:length(name_map$AnalyteName)){
 
 
 #####
-# for(i in 1:length(name_map$AnalyteName)){
-#   data = create.table(csvfile    = LB,
-#                       code_id    = name_map$AnalyteName[i], 
-#                       fullname   = name_map$Fullname[i],
-#                       filter_var = filter_var,
-#                       value_var  = value_var,
-#                       period_    = NULL,
-#                       type_      = FALSE) 
-#   
-#   #write.csv(data, paste0("Appendix_code/Table/16.4.2.3 요검사_", name_map$Fullname[i], ".csv"),row.names=F,fileEncoding = "cp949")
-#   
-# }
-#MyFTable_16.4.2.34To16.4.2.46[[1]]
+for(i in 1:length(name_map$AnalyteName)){
+  data = create.table(csvfile    = LB,
+                      code_id    = name_map$AnalyteName[i],
+                      fullname   = name_map$Fullname[i],
+                      filter_var = filter_var,
+                      value_var  = value_var,
+                      period_    = NULL,
+                      type_      = FALSE)
+
+  #write.csv(data, paste0("Appendix_code/Table/16.4.2.3 요검사_", name_map$Fullname[i], ".csv"),row.names=F,fileEncoding = "cp949")
+
+}
+MyFTable_16.4.2.34To16.4.2.46[[1]]
 #####
 
 #16.4.2.44 blood coagulation test - 혈액응고검사 
@@ -619,6 +623,8 @@ MH <- MH0 %>%
   mutate(SID = SUBJID) %>%
   select(SID, MHSTDTC, PT, SOC)
 subMH <- merge(subid,MH,by=c("SID")) 
+
+
 MyFTable_16.4.3 <- flex.table.fun(subMH)
 
 
@@ -633,6 +639,7 @@ subIE <- merge(subid,IE,by=c("SID"))
 
 subIE[subIE==1] <- "Yes"
 subIE[subIE==2] <- "No"
+
 
 MyFTable_16.4.4 <- flex.table.fun(subIE) 
 
@@ -653,6 +660,7 @@ data <- dcast(PE, SID ~ factor(time, levels = str_sort(unique(PE$time), numeric 
 data[data==1] <- "Normal"
 data[data==2] <- "Abnormal"
 data[is.na(data)] <- "NA"
+
 subPE <- merge(subid,data,by=c("SID")) %>% 
   select("SID", "RID", "Screening  Visit", starts_with("입원일"), starts_with("투여일"), everything())
 
@@ -664,6 +672,8 @@ MyFTable_16.4.5 <- flex.table.fun(subPE)
 VS0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<vs\\>", data.files)]), NULL))
 
 VS0 <- visit.match.fun(infile = VS0, visitData = VST)
+
+VS0[is.na(VS0)] <- "-"
 
 VS <- VS0 %>%
   mutate(SID = SUBJID, 
@@ -729,9 +739,12 @@ VS0.TEMP <- flex.table.fun(
 EG0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<eg\\>", data.files)]), NULL))
 EG <- visit.match.fun(infile = EG0, visitData = VST) %>% filter(is.na(EGND))
 
+
 #View(EG)
 EG <- EG %>%
+  filter(SUBJID %in% c("S01","S02","S04","S07","S09","S10","S11","S15")) %>% 
   mutate(SID = SUBJID)
+
 EGVR <- flex.table.fun(dcast(EG, SID~factor(VISIT, levels=str_sort(unique(EG$VISIT), numeric=T)), value.var = "EGHR")%>%
                           merge(subid,.,by=c("SID")) %>% 
                          select("SID", "RID", "Screening  Visit","투여일(5d)", "UV1"),calc_= TRUE)
@@ -771,11 +784,14 @@ ECGNORM <- flex.table.fun(ECGNORM1, calc_ = FALSE)
 
 # 16.4.8.1. ~ 16.4.8.2. 시력검사 (검사 1번)
 EYE0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<eye\\>", data.files)]), NULL))
+EYE0 <- EYE0 %>% 
+  filter(SUBJID %in% c("S01","S02","S04","S07","S09","S10","S11","S15")) 
+
+
 EYE0$OD_v1 <- round(EYE0$VAOD01 / EYE0$VAOD02,2) #시력검사 결과 산출
 EYE0$OS_v1 <- round(EYE0$VAOS01 / EYE0$VAOS02,2) #시력검사 결과 산출 
 EYE0 <-visit.match.fun(infile= EYE0, visitData = VST)
 EYE0$time <-  paste(EYE0$VISIT,EYE0$IOPNUM, sep="_")
-
 
 EYE1 <- EYE0 %>% 
   group_by(SUBJID, VISIT) %>% 
@@ -1310,4 +1326,4 @@ doc <- body_add_break(doc)
 
 
 appendix.name <- strsplit(getwd(), "/")[[1]][6]
-print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_add_table.docx"))
+print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_v3_20221004.docx"))
