@@ -20,8 +20,8 @@ count.mean.sd.fun <- function(data) {
     cv <- c() # coefficient variation
 
     for (i in 1:(ncol(data) - 1)) {
-        # n[i]    <- length(data[data[,1+i]!="NaN", 2])
-        n[i] <- sum(!is.na(as.numeric(data[, 1 + i])))
+      n[i] <- length(data[data[,1+i]!="NA", 2])
+       # n[i] <- sum(!is.na(data[, 1 + i]))
         med[i] <- median(as.numeric(data[, 1 + i]), na.rm = TRUE)
         min[i] <- min(as.numeric(data[, 1 + i]), na.rm = TRUE)
         max[i] <- max(as.numeric(data[, 1 + i]), na.rm = TRUE)
@@ -36,8 +36,11 @@ count.mean.sd.fun <- function(data) {
     all.names <- c("N", "Median", "Min", "Max", "Mean", "SD", "CV")
 
     for (j in 1:length(all.list)) {
-        all.list[[j]][all.list[[j]] == Inf] <- "NA"
-        all.list[[j]][all.list[[j]] == -Inf] <- "NA"
+        all.list[[j]][all.list[[j]] == Inf] <- "-"
+        all.list[[j]][all.list[[j]] == -Inf] <- "-"
+        all.list[[j]][is.na(all.list[[j]])] <- "-"
+        all.list[[j]][is.nan(all.list[[j]])] <- "-"
+        all.list[[j]][all.list[[j]] == NaN] <- "-"
     }
     return(list(list_ = all.list, names_ = all.names))
 }
