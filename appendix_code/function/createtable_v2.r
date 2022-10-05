@@ -89,8 +89,8 @@ create.table <-
 
         # Map to full name
         if (!is.null(fullname)) {
-            colnames(data.pivot)[-1] <-
-                paste0(as.character(fullname), "_", colnames(data.pivot)[-1])
+            colnames(data.pivot)[-1] # <-
+                #paste0(as.character(fullname), "_", colnames(data.pivot)[-1])
         }
 
         data.table <- data.pivot
