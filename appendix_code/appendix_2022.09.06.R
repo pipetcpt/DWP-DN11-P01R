@@ -22,6 +22,7 @@ getwd()
 # Save CSV Files
 
 list.files('sasdata')
+#####
 # CSV file exist
 # subDir  <- "CSV"
 # sas.files <- list.files('sasdata')[grepl(".sas7bdat", list.files('sasdata'))]     
@@ -30,7 +31,7 @@ list.files('sasdata')
 #  outfile <- write.csv(as.data.frame(read_sas(paste0('sasdata/',files_)), NULL), 
 #                       file = paste0(file.path(subDir), "/", name_, ".csv"))
 #}
-
+#####
 
 ######### FUNCTIONS #########
 source('appendix_code/function/count.mean.sd.r')
@@ -57,13 +58,12 @@ subid <- subid %>% select(SID, RID)
 VST <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<visit\\>", data.files)]), NULL))
 VST$VISIT_CODE <- as.integer(VST$VISIT_CODE)
 VST$VISIT_LABEL <- as.character(VST$VISIT_LABEL)
-#VST$VISIT_LABEL <- VST$VISIT_LABEL %>% 
-#  factor(levels = c("동의취득","Screening Visit","입원일(-1d)","투여일(1d)","투여일(2d)","투여일(3d)","투여일(4d)","투여일(5d)",
-#                    "UV1","UV2","UV3","UV4","UV5","UV6","UV7","UV8","UV9","UV10","UV11","UV12","UV13","UV14","이상반응","병용약물","시험종료","시험책임자 서명"))
+
 
 #16.2.1 중도탈락자
 DS0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ds\\>", data.files)]), NULL))
 DM0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<dm\\>", data.files)]), NULL))
+RN <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<rn\\>", data.files)]), NULL))
 
 DS <- DS0 %>%
   left_join(RN[,c(1,5)], by = "SUBJID") %>%
@@ -167,13 +167,8 @@ MyFTable_16.2.4 <- flex.table.fun(DMSVLS)
 #write.csv(DMSVLS, "appendix/Table/16.2.4시험대상자.csv",row.names=F,fileEncoding = "cp949")
 
 
-################################################################################################################
-###################################  Park maria T part.  #######################################################
-################################################################################################################
-
 
 # 16.2.5.1 ###시험대상자별 투약시간
-RN <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<rn\\>", data.files)]), NULL))
 IP0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ip\\>", data.files)]), NULL))
 IP0 <- visit.match.fun(infile = IP0, visitData = VST)
 
@@ -185,6 +180,10 @@ IP <- IP0 %>%
 
 MyFTable_16.2.5.1 <- flex.table.fun(IP)
 
+################################################################################################################
+###################################  Park maria T part.  #######################################################
+################################################################################################################
+#####
 # dosingtime <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<ip\\>", data.files)]), NULL))%>% 
 #   select(1,4,7) %>% 
 #   left_join(RN, by="SUBJID") %>%
@@ -403,8 +402,8 @@ dplyr::select(SID, VISIT, LBTEST, LBORRES) %>% dplyr::rename(TEST = LBTEST,
   merge(subid,.,by=c("SID")) 
 
 
-# DB Code  ;  Appendix Code
-name_map <- data.frame(rbind(
+# DB Code  ;  Appendix Code 
+name_map1 <- data.frame(rbind(
   # hematology test
   c("WBC", "WBC"),
   c("RBC", "RBC"),
@@ -412,10 +411,10 @@ name_map <- data.frame(rbind(
   c("hematocrit", "Hematocrit"),
   c("platelets", "Platelets"),
   c("Seg. neutrophil", "Seg.neutrophils"),
-  c("Lymphocyte", "Lympho"),
-  c("Monocyte", "Mono"),
-  c("Eosinophil", "Eosino"),
-  c("Basophil", "Baso"),
+  c("Lymphocyte", "Lymphocyte"),
+  c("Monocyte", "Monocyte"),
+  c("Eosinophil", "Eosinophil"),
+  c("Basophil", "Basophil"),
   c("MCV", "MCV"),
   c("MCH", "MCH"),
   c("MCHC", "MCHC"),
@@ -444,31 +443,34 @@ name_map <- data.frame(rbind(
   )
   )
   
-colnames(name_map) <- c("AnalyteName", "Fullname")
+colnames(name_map1) <- c("AnalyteName", "Fullname")
 
 MyFTable_16.4.2.1To16.4.2.33 <- list()
 filter_var <- "TEST"
 value_var <- "RES"
 
-for(i in 1:length(name_map$AnalyteName)){
+for(i in 1:length(name_map1$AnalyteName)){
   MyFTable_16.4.2.1To16.4.2.33[[i]] <- flex.table.fun(
     data = create.table(csvfile    = LB,
-                        code_id    = name_map$AnalyteName[i], 
-                        fullname   = name_map$Fullname[i],
+                        code_id    = name_map1$AnalyteName[i], 
+                        fullname   = name_map1$Fullname[i],
                         filter_var = filter_var,
                         value_var  = value_var,
                         period_    = NULL,
                         type_      = "numeric"),
     
     calc_ = TRUE)
-  data[is.na(data)] <- "-"
-  print(paste("Creating Table for", name_map$Fullname[i], "on subject code"))
+  print(paste("Creating Table for", name_map1$Fullname[i], "on subject code"))
 }
 
-length(name_map$AnalyteName) #32
+length(name_map1$AnalyteName) #32
+
+#check
+MyFTable_16.4.2.1To16.4.2.33[[10]]
+name_map1$AnalyteName[10]
 
 
-####
+#####
 # for(i in 1:13){
 #   data = create.table(csvfile  = LB,
 #                     code_id    = name_map$AnalyteName[i],
@@ -484,7 +486,7 @@ length(name_map$AnalyteName) #32
 #       count.mean.sd.list$names_[j],
 #       unlist(count.mean.sd.list$list_[j])))
 #    }
-#   data[is.na(data)] <- "-"
+#   data[is.na(data)] <- "NA"
 # 
 # }
 # 
@@ -504,20 +506,17 @@ length(name_map$AnalyteName) #32
 #       count.mean.sd.list$names_[j],
 #       unlist(count.mean.sd.list$list_[j])))
 #   }
-#   data[is.na(data)] <- "-"
+#   data[is.na(data)] <- "NA"
 # 
 # }
-####
-
-#check
-MyFTable_16.4.2.1To16.4.2.33[[1]]
+#####
 
 
- #16.4.2.34 ~ 16.4.2.46
+ #16.4.2.34 ~ 16.4.2.46 - 뇨검사
 # Main 
-name_map <- data.frame(rbind(
+name_map2 <- data.frame(rbind(
   # urine test
-  c("glucose(UA)", "Glucose"),
+  c("glucose(UA)", "Glucose(UA)"),
   c("color", "Color"),
   c("leukocyte", "Leukocyte"),
   c("bilirubin", "Bilirubin"),
@@ -535,40 +534,43 @@ name_map <- data.frame(rbind(
 
 )
 
-colnames(name_map) <- c("AnalyteName", "Fullname")
+colnames(name_map2) <- c("AnalyteName", "Fullname")
 
 MyFTable_16.4.2.34To16.4.2.46 <- list()
 filter_var <- "TEST"
 value_var <- "RES"
 
-for(i in 1:length(name_map$AnalyteName)){
+for(i in 1:length(name_map2$AnalyteName)){
   MyFTable_16.4.2.34To16.4.2.46[[i]] <- flex.table.fun(
     data = create.table(csvfile    = LB, 
-                        code_id    = name_map$AnalyteName[i], 
-                        fullname   = name_map$Fullname[i],
+                        code_id    = name_map2$AnalyteName[i], 
+                        fullname   = name_map2$Fullname[i],
                         filter_var = filter_var,
                         value_var  = value_var,
                         period_    = NULL,
                         type_      = FALSE),
     calc_ = FALSE)
   
-  print(paste("Table created for", name_map$Fullname[i]))
+  print(paste("Table created for", name_map2$Fullname[i]))
 } 
 
+#check
+MyFTable_16.4.2.34To16.4.2.46[[10]]
+name_map2$AnalyteName[10]
 
 #####
-for(i in 1:length(name_map$AnalyteName)){
-  data = create.table(csvfile    = LB,
-                      code_id    = name_map$AnalyteName[i],
-                      fullname   = name_map$Fullname[i],
-                      filter_var = filter_var,
-                      value_var  = value_var,
-                      period_    = NULL,
-                      type_      = FALSE)
-
-  #write.csv(data, paste0("Appendix_code/Table/16.4.2.3 요검사_", name_map$Fullname[i], ".csv"),row.names=F,fileEncoding = "cp949")
-
-}
+# for(i in 1:length(name_map$AnalyteName)){
+#   data = create.table(csvfile    = LB,
+#                       code_id    = name_map$AnalyteName[i],
+#                       fullname   = name_map$Fullname[i],
+#                       filter_var = filter_var,
+#                       value_var  = value_var,
+#                       period_    = NULL,
+#                       type_      = FALSE)
+# 
+#   #write.csv(data, paste0("Appendix_code/Table/16.4.2.3 요검사_", name_map$Fullname[i], ".csv"),row.names=F,fileEncoding = "cp949")
+# 
+# }
 MyFTable_16.4.2.34To16.4.2.46[[1]]
 #####
 
@@ -583,7 +585,7 @@ AnalyteName.pivot2 <- dcast(BC.LAB, SID ~ TEST, value.var = "RES")
 subBCT <- merge(subid,AnalyteName.pivot2,by=c("SID")) 
 MyFTable_16.4.2.44 <- flex.table.fun(subBCT)
 
-#16.4.2.45 serum test - 혈청검사
+#16.4.2.45 serum test - 혈청검사;
 
 SR.LAB <- LB %>% 
   filter(TEST == "HBsAg" |
@@ -647,7 +649,7 @@ MyFTable_16.4.4 <- flex.table.fun(subIE)
 # 16.4.5 Physical examination - 신체검사 
 PE0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<pe\\>", data.files)]), NULL))
 PE <- visit.match.fun(infile = PE0, visitData = VST)
-PE<-PE %>% 
+PE<- PE %>% 
   mutate(SID = SUBJID,
          PENT = case_when(PE$PENT == 1 ~ "투여 전",
                           PE$PENT == 2 ~ "투여 후 4h",
@@ -662,6 +664,7 @@ data[data==2] <- "Abnormal"
 data[is.na(data)] <- "NA"
 
 subPE <- merge(subid,data,by=c("SID")) %>% 
+  filter(SID %in% c("S01","S02","S04","S07","S09","S10","S11","S15")) %>% 
   select("SID", "RID", "Screening  Visit", starts_with("입원일"), starts_with("투여일"), everything())
 
 MyFTable_16.4.5 <- flex.table.fun(subPE)
@@ -817,14 +820,23 @@ MyFTable_16.4.8.2 <- flex.table.fun(
 MyFTable_16.4.8.3 <- flex.table.fun(
   spread(data = EYE0[,c(1,9,19)],key = time, value = IOPOD) %>% 
     merge(subid,., by.x="SID", by.y="SUBJID") %>%
-    select("SID","RID", starts_with("Screening"), starts_with("투여일"), starts_with("UV1")))
+    select("SID","RID", "Screening  Visit_1회", "Screening  Visit_2회","Screening  Visit_평균",
+           "Screening  Visit_중앙값","Screening  Visit_3회",
+           "투여일(5d)_1회", "투여일(5d)_2회", "투여일(5d)_평균",
+           "투여일(5d)_중앙값", "투여일(5d)_3회",
+           "UV1_1회", "UV1_2회", "UV1_평균",
+           "UV1_중앙값", "UV1_3회"))
   
-
 #OS    
 MyFTable_16.4.8.4 <- flex.table.fun(
   spread(data = EYE0[,c(1,10,19)],key = time, value = IOPOS) %>% 
     merge(subid,., by.x="SID", by.y="SUBJID") %>% 
-    select("SID","RID", starts_with("Screening"), starts_with("투여일"), starts_with("UV1")))
+    select("SID","RID", "Screening  Visit_1회", "Screening  Visit_2회","Screening  Visit_평균",
+           "Screening  Visit_중앙값","Screening  Visit_3회",
+           "투여일(5d)_1회", "투여일(5d)_2회", "투여일(5d)_평균",
+           "투여일(5d)_중앙값", "투여일(5d)_3회",
+           "UV1_1회", "UV1_2회", "UV1_평균",
+           "UV1_중앙값", "UV1_3회"))
 
 
 # 16.4.8.5 ~ 16.8.6 눈물막 파괴 사건 (검사 1번)
@@ -1061,160 +1073,343 @@ doc <- body_end_section_landscape(doc) #가로 끝
 
 doc <- body_add_par(doc, "실험실적 검사", style = "heading 3") 	#16.4.2
 doc <- body_add_par(doc, "16.4.2.1 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[1]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[1]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.2 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[2]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[2]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.3 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[3]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[3]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.4 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[4]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[4]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.2.5 혈액학 검사", style="rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[5]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[5]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.6 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[6]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[6]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.7 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[7]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[7]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.8 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[8]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[8]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.2.9 혈액학 검사", style="rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[9]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[9]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.10 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[10]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[10]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.11 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[11]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[11]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.12 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[12]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[12]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.13 혈액학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[13]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[13]])
 doc <- body_add_break(doc)
+#####
+# doc <- body_add_par(doc, "16.4.2.2 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[2]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.3 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[3]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.4 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[4]])
+# doc <- body_add_break(doc)
+# 
+# doc <- body_add_par(doc, "16.4.2.5 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[5]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.6 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[6]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.7 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[7]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.8 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[8]])
+# doc <- body_add_break(doc)
+# 
+# doc <- body_add_par(doc, "16.4.2.9 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[9]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.10 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[10]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.11 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[11]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.12 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[12]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.13 혈액학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[13]])
+# doc <- body_add_break(doc)
+#####
 
-doc <- body_add_par(doc, "16.4.2.14 혈액화학 검사", style="rTableLegend")
+doc <- body_add_par(doc, "16.4.2.2 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[14]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[14]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.15 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[15]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[15]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.16 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[16]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[16]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.17 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[17]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[17]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.18 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[18]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[18]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.2.19 혈액화학 검사", style="rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[19]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[19]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.20 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[20]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[20]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.21 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[21]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[21]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.22 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[22]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[22]])
 doc <- body_add_break(doc)
 
-#doc <- body_end_section_continuous(doc) # 가로 시작
-doc <- body_add_par(doc, "16.4.2.23 혈액화학 검사", style="rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[23]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[23]])
 doc <- body_add_break(doc)
-#doc <- body_end_section_landscape(doc) #가로 끝
 
-doc <- body_add_par(doc, "16.4.2.24 혈액화학 검사", style="rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[24]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[24]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.25 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[25]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[25]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.26 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[26]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[26]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.27 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[27]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[27]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.28 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[28]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[28]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.29 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[29]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[29]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.30 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[30]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[30]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.2.31 혈액화학 검사", style="rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[31]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[31]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.32 혈액화학 검사", style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[32]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[32]])
 doc <- body_add_break(doc)
+
+
+#####
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[14]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.15 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[15]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.16 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[16]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.17 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[17]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.18 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[18]])
+# doc <- body_add_break(doc)
+# 
+# doc <- body_add_par(doc, "16.4.2.19 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[19]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.20 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[20]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.21 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[21]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.22 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[22]])
+# doc <- body_add_break(doc)
+
+#doc <- body_end_section_continuous(doc) # 가로 시작
+# doc <- body_add_par(doc, "16.4.2.23 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[23]])
+# doc <- body_add_break(doc)
+#doc <- body_end_section_landscape(doc) #가로 끝
+
+# doc <- body_add_par(doc, "16.4.2.24 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[24]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.25 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[25]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.26 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[26]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.27 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[27]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.28 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[28]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.29 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[29]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.30 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[30]])
+# doc <- body_add_break(doc)
+# 
+# doc <- body_add_par(doc, "16.4.2.31 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[31]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.32 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[32]])
+# doc <- body_add_break(doc)
 #doc <- body_add_par(doc, "16.4.2.33 혈액화학 검사", style="rTableLegend")
 #doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[33]])
 #doc <- body_add_break(doc)
+#####
 
+doc <- body_add_par(doc, "16.4.2.3 뇨검사",style="rTableLegend")
 
-doc <- body_add_par(doc, "16.4.2.34 소변검사",style="rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[1]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[1]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.35 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[2]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[2]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.36 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[3]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[3]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.37 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[4]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[4]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.38 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[5]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[5]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.39 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[6]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[6]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.40 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[7]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[7]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.41 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[8]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[8]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.42 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[9]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[9]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.43 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[10]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[10]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.44 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[11]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[11]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.45 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[12]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[12]])
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.4.2.46 소변검사",style="rTableLegend")
+
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[13]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[13]])
 doc <- body_add_break(doc)
+#####
+# doc <- body_add_par(doc, "16.4.2.35 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[2]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.36 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[3]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.37 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[4]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.38 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[5]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.39 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[6]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.40 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[7]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.41 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[8]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.42 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[9]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.43 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[10]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.44 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[11]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.45 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[12]])
+# doc <- body_add_break(doc)
+# doc <- body_add_par(doc, "16.4.2.46 뇨검사",style="rTableLegend")
+# doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[13]])
+# doc <- body_add_break(doc)
+#####
 
-doc <- body_add_par(doc, "16.4.2.47 혈액응고검사",  style="rTableLegend") 
+doc <- body_add_par(doc, "16.4.2.4 혈액응고검사",  style="rTableLegend") 
 doc <- body_add_flextable(doc, MyFTable_16.4.2.44)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.2.48 혈청검사",  style="rTableLegend")
+doc <- body_add_par(doc, "16.4.2.5 혈청검사",  style="rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.45)
 doc <- body_add_break(doc)
 
@@ -1326,4 +1521,4 @@ doc <- body_add_break(doc)
 
 
 appendix.name <- strsplit(getwd(), "/")[[1]][6]
-print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_v3_20221004.docx"))
+print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_v3_20221005.docx"))
