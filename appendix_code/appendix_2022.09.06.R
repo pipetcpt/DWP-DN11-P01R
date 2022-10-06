@@ -771,22 +771,22 @@ MyFTable_16.4.8.3 <- flex.table.fun(
   spread(data = EYE0[,c(1,9,19)],key = time, value = IOPOD) %>% 
     merge(subid,., by.x="SID", by.y="SUBJID") %>%
     select("SID","RID", "Screening  Visit_1회", "Screening  Visit_2회","Screening  Visit_평균",
-           "Screening  Visit_중앙값","Screening  Visit_3회",
+           "Screening  Visit_3회","Screening  Visit_중앙값",
            "투여일(5d)_1회", "투여일(5d)_2회", "투여일(5d)_평균",
-           "투여일(5d)_중앙값", "투여일(5d)_3회",
+           "투여일(5d)_3회","투여일(5d)_중앙값",
            "UV1_1회", "UV1_2회", "UV1_평균",
-           "UV1_중앙값", "UV1_3회"))
+           "UV1_3회", "UV1_중앙값", ))
   
 #OS    
 MyFTable_16.4.8.4 <- flex.table.fun(
   spread(data = EYE0[,c(1,10,19)],key = time, value = IOPOS) %>% 
     merge(subid,., by.x="SID", by.y="SUBJID") %>% 
     select("SID","RID", "Screening  Visit_1회", "Screening  Visit_2회","Screening  Visit_평균",
-           "Screening  Visit_중앙값","Screening  Visit_3회",
+           "Screening  Visit_3회","Screening  Visit_중앙값",
            "투여일(5d)_1회", "투여일(5d)_2회", "투여일(5d)_평균",
-           "투여일(5d)_중앙값", "투여일(5d)_3회",
+           "투여일(5d)_3회","투여일(5d)_중앙값", 
            "UV1_1회", "UV1_2회", "UV1_평균",
-           "UV1_중앙값", "UV1_3회"))
+           "UV1_3회","UV1_중앙값"))
 
 
 # 16.4.8.5 ~ 16.8.6 눈물막 파괴 사건 (검사 1번)
