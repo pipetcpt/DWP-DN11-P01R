@@ -82,7 +82,6 @@ DS <- DS0 %>%
   arrange(SID)
 
 DM <- DM0 %>%
-  filter(!SUBJID=="S03") %>% 
   dplyr::rename(SID = SUBJID,
                 Sex = SEX,
                 Age = AGE) %>%
@@ -111,8 +110,7 @@ SV <- SV0 %>%
   select(SID, SVDTC) %>%
   arrange(SID)
 
-DM <- DM0 %>%
-  filter(!SUBJID=="S03") %>% 
+DM <- DM0 %>% 
   mutate(SID = SUBJID,
          SEX = case_when(SEX == 1 ~ '남',
                          SEX == 2 ~ '여')) %>%
@@ -163,9 +161,6 @@ colnames(DMSVLS)=c("SID",
 # DMSV[is.na(DMSV)] <- " "
 str(DMSVLS)
 MyFTable_16.2.4 <- flex.table.fun(DMSVLS)
-
-#write.csv(DMSVLS, "appendix/Table/16.2.4시험대상자.csv",row.names=F,fileEncoding = "cp949")
-
 
 
 # 16.2.5.1 ###시험대상자별 투약시간
@@ -393,7 +388,6 @@ MyFTable_16.4.1 <- flex.table.fun(subCM)
 LB0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<lb\\>", data.files)]), NULL))
 
 LB <- LB0 %>% 
-  filter(SUBJID %in% c("S01","S02","S04","S07","S09","S10","S11","S15")) %>% 
   mutate(SID = SUBJID,
          LBTEST = case_when(endsWith(LBTEST, "-GT") ~ "GGT",
                           TRUE ~ as.character(LBTEST))) %>%
@@ -468,48 +462,6 @@ length(name_map1$AnalyteName) #32
 #check
 MyFTable_16.4.2.1To16.4.2.33[[10]]
 name_map1$AnalyteName[10]
-
-
-#####
-# for(i in 1:13){
-#   data = create.table(csvfile  = LB,
-#                     code_id    = name_map$AnalyteName[i],
-#                     fullname   = name_map$Fullname[i],
-#                     filter_var = filter_var,
-#                     value_var  = value_var,
-#                     period_    = NULL,
-#                     type_      = "numeric")
-#   count.mean.sd.list <- count.mean.sd.fun(data)
-# 
-#   for (j in 1:length(count.mean.sd.list$list_)) {
-#    data<- rbind(data, c(
-#       count.mean.sd.list$names_[j],
-#       unlist(count.mean.sd.list$list_[j])))
-#    }
-#   data[is.na(data)] <- "NA"
-# 
-# }
-# 
-# for(i in 14:32){
-#   data = create.table(csvfile    = LB,
-#                       code_id    = name_map$AnalyteName[i],
-#                       fullname   = name_map$Fullname[i],
-#                       filter_var = filter_var,
-#                       value_var  = value_var,
-#                       period_    = NULL,
-#                       type_      = "numeric")
-# 
-#   count.mean.sd.list <- count.mean.sd.fun(data)
-# 
-#   for (j in 1:length(count.mean.sd.list$list_)) {
-#     data<- rbind(data, c(
-#       count.mean.sd.list$names_[j],
-#       unlist(count.mean.sd.list$list_[j])))
-#   }
-#   data[is.na(data)] <- "NA"
-# 
-# }
-#####
 
 
  #16.4.2.34 ~ 16.4.2.46 - 뇨검사
@@ -653,8 +605,10 @@ PE<- PE %>%
   mutate(SID = SUBJID,
          PENT = case_when(PE$PENT == 1 ~ "투여 전",
                           PE$PENT == 2 ~ "투여 후 4h",
-                          PE$PENT == 3 ~ "투여 후 10h"),
-         time = ifelse(!is.na(PE$PENT),paste(PE$VISIT, PE$PENT, sep = '_'), PE$VISIT))
+                          PE$PENT == 3 ~ "투여 후 10h"))
+         
+PE <- PE %>% 
+  mutate(time = ifelse(!is.na(PE$PENT),paste(PE$VISIT, PE$PENT, sep = '_'), PE$VISIT))
 
 data <- dcast(PE, SID ~ factor(time, levels = str_sort(unique(PE$time), numeric = T)), value.var = "PENOR") 
  
@@ -664,7 +618,6 @@ data[data==2] <- "Abnormal"
 data[is.na(data)] <- "NA"
 
 subPE <- merge(subid,data,by=c("SID")) %>% 
-  filter(SID %in% c("S01","S02","S04","S07","S09","S10","S11","S15")) %>% 
   select("SID", "RID", "Screening  Visit", starts_with("입원일"), starts_with("투여일"), everything())
 
 MyFTable_16.4.5 <- flex.table.fun(subPE)
@@ -745,7 +698,6 @@ EG <- visit.match.fun(infile = EG0, visitData = VST) %>% filter(is.na(EGND))
 
 #View(EG)
 EG <- EG %>%
-  filter(SUBJID %in% c("S01","S02","S04","S07","S09","S10","S11","S15")) %>% 
   mutate(SID = SUBJID)
 
 EGVR <- flex.table.fun(dcast(EG, SID~factor(VISIT, levels=str_sort(unique(EG$VISIT), numeric=T)), value.var = "EGHR")%>%
@@ -787,8 +739,6 @@ ECGNORM <- flex.table.fun(ECGNORM1, calc_ = FALSE)
 
 # 16.4.8.1. ~ 16.4.8.2. 시력검사 (검사 1번)
 EYE0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<eye\\>", data.files)]), NULL))
-EYE0 <- EYE0 %>% 
-  filter(SUBJID %in% c("S01","S02","S04","S07","S09","S10","S11","S15")) 
 
 
 EYE0$OD_v1 <- round(EYE0$VAOD01 / EYE0$VAOD02,2) #시력검사 결과 산출
@@ -934,6 +884,7 @@ MyFTable_16.4.8.10 <- flex.table.fun(
 # BF <- BF0[,c(1,2,4,5)] %>% arrange(VISIT)
 # colnames(BF) <- c("SID","visit","측정시점","결과(mg/dL)")
 # subBF <- flex.table.fun(merge(subid,BF,by=c("SID")))
+
 
 
 ##############################
@@ -1521,4 +1472,4 @@ doc <- body_add_break(doc)
 
 
 appendix.name <- strsplit(getwd(), "/")[[1]][6]
-print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_v3_20221005.docx"))
+print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_v4_20221006.docx"))
