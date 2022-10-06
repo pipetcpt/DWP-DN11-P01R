@@ -481,8 +481,8 @@ name_map2 <- data.frame(rbind(
   c("nitrite", "Nitrite"),
   
   #  urine test_Microscopy
-  c("WBC_microscopy", "Microscopy WBC"),
-  c("RBC_microscopy", "Microscopy RBC"))
+  c("Microscopy_WBC", "Microscopy WBC"),
+  c("Microscopy_RBC", "Microscopy RBC"))
 
 )
 
@@ -840,7 +840,7 @@ MyFTable_16.4.8.8 <- flex.table.fun(
     select("SID","RID", "Screening  Visit","투여일(5d)","UV1"))
 
 
-# 16.4.8.9 ~ 16.8.10 세극동 검사 (검사 1번)
+# 16.4.8.9 ~ 16.8.10 세극등 검사 (검사 1번)
 #OD
 MyFTable_16.4.8.9 <- flex.table.fun(
   spread(data = EYE2[,c(1,2,7)],key = VISIT, value = SLOD) %>% 
@@ -1462,11 +1462,11 @@ doc <- body_add_par(doc, "16.4.8.8 쉬르머 검사(OS)", style = "rTableLegend"
 doc <- body_add_flextable(doc, MyFTable_16.4.8.8)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.9 세극동 검사(OD)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.9 세극등 검사(OD)", style = "rTableLegend") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.9)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.10 세극동 검사(OS)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.10 세극등 검사(OS)", style = "rTableLegend") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.10)
 doc <- body_add_break(doc)
 
