@@ -890,107 +890,90 @@ MyFTable_16.4.8.10 <- flex.table.fun(
 ##############################
 ###       Doc & Table      ###
 ##############################
-#doc <- read_docx(path = "/Users/NOHYOONJI/Documents/GitHub/Template/Template.docx")
-doc <- read_docx(path = "C:/Users/Owner/Documents/GitHub/Template/Template.docx")
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #1
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #2
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #3
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #4
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #5
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #6
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #7
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #8
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #9
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #10
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #11
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #12
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #13
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #14
-doc <- body_add_par(doc, "Format cell text values", style = "heading 1") #15
-doc <- body_add_par(doc, "Appendix", style = "heading 1") #16
-doc <- body_add_par(doc, "시험정보", style = "heading 2") #16.1
-doc <- body_add_par(doc, "임상시험 계획서", style = "heading 3") #16.1.1
+doc <- body_add_par(doc, "Appendix", style = "heading 1") #1
+doc <- body_add_par(doc, "시험정보", style = "heading 2") #1.1
+doc <- body_add_par(doc, "임상시험 계획서", style = "heading 3") #1.1.1
+doc <- body_add_par(doc, "Refer to ISF", style = "normal")
+doc <- body_add_break(doc)
+doc <- body_add_par(doc, "증례기록서 양식", style = "heading 3") #1.1.2
+doc <- body_add_par(doc, "Refer to ISF", style = "normal")
+doc <- body_add_break(doc)
+doc <- body_add_par(doc, "임상시험 심사위원회의 명단 및 심사기록, 서면동의서와 동의를 위한 설명서 양식", style = "heading 3") #1.1.3
 doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "증례기록서 양식", style = "heading 3") #16.1.2
+doc <- body_add_par(doc, "시험책임자 및 담당자, 공동연구자의 명단 및 시험수행에 적합한 약력", style = "heading 3") #1.1.4
 doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "임상시험 심사위원회의 명단 및 심사기록, 서면동의서와 동의를 위한 설명서 양식", style = "heading 3") #16.1.3
-doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
-doc <- body_add_break(doc)
-doc <- body_add_par(doc, "시험책임자 및 담당자, 공동연구자의 명단 및 시험수행에 적합한 약력", style = "heading 3") #16.1.4
-doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
-doc <- body_add_break(doc)
-doc <- body_add_par(doc, "시험책임자 및 공동연구자 또는 시험 의뢰자의 서명", style = "heading 3") #16.1.5
+doc <- body_add_par(doc, "시험책임자 및 공동연구자 또는 시험 의뢰자의 서명", style = "heading 3") #1.1.5
 doc <- body_add_par(doc, "Refer to section 1.2", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "2가지 이상의 batch에서 제조된 임상시험용의약품을 투여 받았을 경우 그 제조번호 목록 및 각 batch별 투여된 피험자의 명단", style = "heading 3") #16.1.6
+doc <- body_add_par(doc, "2가지 이상의 batch에서 제조된 임상시험용의약품을 투여 받았을 경우 그 제조번호 목록 및 각 batch별 투여된 피험자의 명단", style = "heading 3") #1.1.6
 doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "무작위 배정 방법 및 배정표", style = "heading 3") #16.1.7
+doc <- body_add_par(doc, "무작위 배정 방법 및 배정표", style = "heading 3") #1.1.7
 doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "점검확인서",  style = "heading 3") #16.1.8
+doc <- body_add_par(doc, "점검확인서",  style = "heading 3") #1.1.8
 doc <- body_add_par(doc, "Refer to Audit Certificates", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "통계적 방법에 관한 문서", style = "heading 3") #16.1.9
+doc <- body_add_par(doc, "통계적 방법에 관한 문서", style = "heading 3") #1.1.9
 doc <- body_add_par(doc, "Refer to statistical analysis plan", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "각 실시기관의 실험실간 표준화 방법, 기타 자료의 질적 보증을 위해 사용한 방법", style = "heading 3") #16.1.10
+doc <- body_add_par(doc, "각 실시기관의 실험실간 표준화 방법, 기타 자료의 질적 보증을 위해 사용한 방법", style = "heading 3") #1.1.10
 doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "임상시험결과를 출판하였을 경우 출판물", style = "heading 3") #16.1.11
+doc <- body_add_par(doc, "임상시험결과를 출판하였을 경우 출판물", style = "heading 3") #1.1.11
 doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "임상시험결과의 평가에 절대적 영향을 미친 참고문헌", style = "heading 3") #16.1.12
+doc <- body_add_par(doc, "임상시험결과의 평가에 절대적 영향을 미친 참고문헌", style = "heading 3") #1.1.12
 doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "시험대상자 자료 목록", style = "heading 2") #16.2
+doc <- body_add_par(doc, "시험대상자 자료 목록", style = "heading 2") #1.2
 
-doc <- body_add_par(doc, "중도탈락자", style = "heading 3")	#16.2.1
+doc <- body_add_par(doc, "중도탈락자", style = "heading 3")	#1.2.1
 doc <- body_add_flextable(doc, MyFTable_16.2.1)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "시험계획서 이탈", style = "heading 3") #16.2.2
+doc <- body_add_par(doc, "시험계획서 이탈", style = "heading 3") #1.2.2
 doc <- body_add_par(doc, "Refer to section 10.2", style = "rTableLegend")
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "약동학 평가에서 제외된 시험대상자", style = "heading 3") #16.2.3
+doc <- body_add_par(doc, "약동학 평가에서 제외된 시험대상자", style = "heading 3") #1.2.3
 doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "시험대상자 특성표", style = "heading 3") #16.2.4
+doc <- body_add_par(doc, "시험대상자 특성표", style = "heading 3") #1.2.4
 doc <- body_add_flextable(doc, MyFTable_16.2.4)
 doc <- body_add_break(doc)
 
 doc <- body_end_section_continuous(doc) # 가로 시작
-doc <- body_add_par(doc, "순응도 및 혈중농도 자료", style = "heading 3") #16.2.5
+doc <- body_add_par(doc, "순응도 및 혈중농도 자료", style = "heading 3") #1.2.5
 doc <- body_add_par(doc, "16.2.5.1 시험대상자별 개별 투약 시간", style="rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.2.5.1)
 doc <- body_add_break(doc)
 doc <- body_end_section_landscape(doc) #가로 끝
 
-doc <- body_add_par(doc, "16.2.5.2 시험대상자별 혈장 내 농도 (Period 1 Tamsulosin)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.5.2 시험대상자별 혈장 내 농도 (Period 1 Tamsulosin)", style="rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.2.5.3 시험대상자별 혈장 내 농도 (Period 2 Mirabegron)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.5.3 시험대상자별 혈장 내 농도 (Period 2 Mirabegron)", style="rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.2.5.4 시험대상자별 혈장 내 농도 (Period 3 Tamsulosin)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.5.4 시험대상자별 혈장 내 농도 (Period 3 Tamsulosin)", style="rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.2.5.5 시험대상자별 혈장 내 농도 (Period 3 Mirabegron)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.5.5 시험대상자별 혈장 내 농도 (Period 3 Mirabegron)", style="rTableLegend")
 doc <- body_add_break(doc)
 ######################################
 doc <- body_add_par(doc, "시험대상자별 약동학 결과", style = "heading 3") #16.2.6
-doc <- body_add_par(doc, "16.2.6.1 시험대상자별 비구획 분석 결과 (Tamsulosin)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.6.1 시험대상자별 비구획 분석 결과 (Tamsulosin)", style="rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.2.6.2 시험대상자별 비구획 분석 결과 (Mirabegron)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.6.2 시험대상자별 비구획 분석 결과 (Mirabegron)", style="rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.2.6.3 시험대상자별 혈중농도 프로파일 (Tamsulosin)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.6.3 시험대상자별 혈중농도 프로파일 (Tamsulosin)", style="rTableLegend")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "16.2.6.4 시험대상자별 혈중농도 프로파일 (Mirabegron)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.6.4 시험대상자별 혈중농도 프로파일 (Mirabegron)", style="rTableLegend")
 doc <- body_add_break(doc)
 
 doc <- body_end_section_continuous(doc) # 가로 시작
-doc <- body_add_par(doc, "16.2.6.5 시험대상자별 채혈수행시각", style="rTableLegend") #마리아 선생님께 받아야함
+doc <- body_add_par(doc, "1.2.6.5 시험대상자별 채혈수행시각", style="rTableLegend") #마리아 선생님께 받아야함
 doc <- body_add_flextable(doc, MyFTable_16.2.6.5.1)
 doc <- body_add_break(doc)
 doc <- body_add_flextable(doc, MyFTable_16.2.6.5.2)
@@ -999,31 +982,31 @@ doc <- body_add_break(doc)
 
 #doc <- body_end_section_continuous(doc) # 가로 시작
 doc <- body_end_section_landscape(doc) #가로 끝
-doc <- body_add_par(doc, "시험대상자별 이상반응 목록", style = "heading 3") #16.2.7
+doc <- body_add_par(doc, "시험대상자별 이상반응 목록", style = "heading 3") #1.2.7
 doc <- body_add_flextable(doc, MyFTable_16.2.7)
 doc <- body_add_break(doc)
 #doc <- body_end_section_landscape(doc) #가로 끝
-doc <- body_add_par(doc, "피험자별 임상검사 비정상치 자료", style = "heading 3") #16.2.8
+doc <- body_add_par(doc, "피험자별 임상검사 비정상치 자료", style = "heading 3") #1.2.8
 doc <- body_add_break(doc)
 
 
-doc <- body_add_par(doc, "증례기록서", style = "heading 2") #16.3
-doc <- body_add_par(doc, "사망, 또는 다른 중대한 이상반응, 다른 유의성 있는 이상반응에 대한 증례기록서", style = "heading 3") #16.3.1
+doc <- body_add_par(doc, "증례기록서", style = "heading 2") #1.3
+doc <- body_add_par(doc, "사망, 또는 다른 중대한 이상반응, 다른 유의성 있는 이상반응에 대한 증례기록서", style = "heading 3") #1.3.1
 doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
-doc <- body_add_par(doc, "이외의 증례기록서", style = "heading 3") #16.3.2
+doc <- body_add_par(doc, "이외의 증례기록서", style = "heading 3") #1.3.2
 doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
 doc <- body_add_break(doc)
 
 doc <- body_end_section_continuous(doc) # 가로 시작
-doc <- body_add_par(doc, "시험대상자별 자료 목록", style = "heading 2") # 16.4
-doc <- body_add_par(doc, "선행약물 또는 병행 약물", style = "heading 3") # 16.4.1
+doc <- body_add_par(doc, "시험대상자별 자료 목록", style = "heading 2") # 1.4
+doc <- body_add_par(doc, "선행약물 또는 병행 약물", style = "heading 3") # 1.4.1
 doc <- body_add_flextable(doc, MyFTable_16.4.1)
 doc <- body_add_break(doc)
 doc <- body_end_section_landscape(doc) #가로 끝
 
 
-doc <- body_add_par(doc, "실험실적 검사", style = "heading 3") 	#16.4.2
-doc <- body_add_par(doc, "16.4.2.1 혈액학 검사", style="rTableLegend")
+doc <- body_add_par(doc, "실험실적 검사", style = "heading 3") 	#1.4.2
+doc <- body_add_par(doc, "16.4.2.1 혈액학 검사", style="heading3")
 
 doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[1]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[1]])
@@ -1117,7 +1100,7 @@ doc <- body_add_break(doc)
 # doc <- body_add_break(doc)
 #####
 
-doc <- body_add_par(doc, "16.4.2.2 혈액화학 검사", style="rTableLegend")
+doc <- body_add_par(doc, "1.4.2.2 혈액화학 검사", style="heading3")
 
 doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[14]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[14]])
@@ -1264,7 +1247,7 @@ doc <- body_add_break(doc)
 #doc <- body_add_break(doc)
 #####
 
-doc <- body_add_par(doc, "16.4.2.3 뇨검사",style="rTableLegend")
+doc <- body_add_par(doc, "16.4.2.3 뇨검사",style="heading3")
 
 doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[1]), style = "rTableLegend")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[1]])
@@ -1356,15 +1339,15 @@ doc <- body_add_break(doc)
 # doc <- body_add_break(doc)
 #####
 
-doc <- body_add_par(doc, "16.4.2.4 혈액응고검사",  style="rTableLegend") 
+doc <- body_add_par(doc, "16.4.2.4 혈액응고검사",  style="heading3") 
 doc <- body_add_flextable(doc, MyFTable_16.4.2.44)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.2.5 혈청검사",  style="rTableLegend")
+doc <- body_add_par(doc, "16.4.2.5 혈청검사",  style="heading3")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.45)
 doc <- body_add_break(doc)
 
-#doc <- body_add_par(doc, "16.4.2.49 소변약물 검사",  style="rTableLegend")
+#doc <- body_add_par(doc, "16.4.2.49 소변약물 검사",  style="heading3")
 #doc <- body_add_flextable(doc, MyFTable_16.4.2.46)
 #doc <- body_add_break(doc)
 
@@ -1383,90 +1366,90 @@ doc <- body_add_flextable(doc, MyFTable_16.4.5)
 doc <- body_add_break(doc)
 
 doc <- body_add_par(doc, "활력 징후", style = "heading 3") # 16.4.6
-doc <- body_add_par(doc, "16.4.6.1 활력징후[SBP]", style="rTableLegend")
+doc <- body_add_par(doc, "16.4.6.1 활력징후[SBP]", style="heading4")
 doc <- body_add_flextable(doc, VS0.SYSBP)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.6.2 활력징후[DBP]", style="rTableLegend")
+doc <- body_add_par(doc, "16.4.6.2 활력징후[DBP]", style="heading4")
 doc <- body_add_flextable(doc, VS0.BPSYS)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.6.3 활력징후[PULSE]", style="rTableLegend")
+doc <- body_add_par(doc, "16.4.6.3 활력징후[PULSE]", style="heading4")
 doc <- body_add_flextable(doc, VS0.PL)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.6.4 활력징후[BODY TEMPERATURE]", style="rTableLegend")
+doc <- body_add_par(doc, "16.4.6.4 활력징후[BODY TEMPERATURE]", style="heading4")
 doc <- body_add_flextable(doc, VS0.TEMP)
 doc <- body_add_break(doc)
 doc <- body_end_section_landscape(doc) #끝
 
 doc <- body_add_par(doc, "12-Lead 심전도", style = "heading 3") # 16.4.7
-doc <- body_add_par(doc, "16.4.7.1 12-Lead 심전도[Ventricular rate]", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.7.1 12-Lead 심전도[Ventricular rate]", style = "heading4") 
 doc <- body_add_flextable(doc, EGVR)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.2 12-Lead 심전도[PR Interval]", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.7.2 12-Lead 심전도[PR Interval]", style = "heading4") 
 doc <- body_add_flextable(doc, EGPR)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.3 12-Lead 심전도[QRSD Interval]", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.7.3 12-Lead 심전도[QRSD Interval]", style = "heading4") 
 doc <- body_add_flextable(doc, EGQRSD)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.4 12-Lead 심전도[QT Interval]", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.7.4 12-Lead 심전도[QT Interval]", style = "heading4") 
 doc <- body_add_flextable(doc, EGQT)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.5 12-Lead 심전도[QTc Interval]", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.7.5 12-Lead 심전도[QTc Interval]", style = "heading4") 
 doc <- body_add_flextable(doc, EGQTC)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.6 12-Lead 심전도[Over all]", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.7.6 12-Lead 심전도[Over all]", style = "heading4") 
 doc <- body_add_flextable(doc, ECGNORM)
 doc <- body_add_break(doc)
 
 doc <- body_add_par(doc, "안과검사", style = "heading 3") # 16.4.8.1
-doc <- body_add_par(doc, "16.4.8.1 시력검사(OD)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.1 시력검사(OD)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.1)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.2 시력검사(OS)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.2 시력검사(OS)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.2)
 doc <- body_add_break(doc)
 
 doc <- body_end_section_continuous(doc) # 가로 시작
 
-doc <- body_add_par(doc, "16.4.8.3 안압검사(OD)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.3 안압검사(OD)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.3)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.4 안압검사(OS)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.4 안압검사(OS)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.4)
 doc <- body_add_break(doc)
 
 doc <- body_end_section_landscape(doc) #가로 끝
 
-doc <- body_add_par(doc, "16.4.8.5 눈물막 파괴 시간(OD)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.5 눈물막 파괴 시간(OD)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.5)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.6 눈물막 파괴 시간(OS)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.6 눈물막 파괴 시간(OS)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.6)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.7 쉬르머 검사(OD)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.7 쉬르머 검사(OD)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.7)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.8 쉬르머 검사(OS)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.8 쉬르머 검사(OS)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.8)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.9 세극등 검사(OD)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.9 세극등 검사(OD)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.9)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.10 세극등 검사(OS)", style = "rTableLegend") 
+doc <- body_add_par(doc, "16.4.8.10 세극등 검사(OS)", style = "heading4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.10)
 doc <- body_add_break(doc)
 
