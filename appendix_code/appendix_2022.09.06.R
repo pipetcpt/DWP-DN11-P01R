@@ -291,7 +291,7 @@ colnames(subAE) <- c("SID",
 MyFTable_16.2.7 <- flex.table.fun(subAE)
 
 
-#16.2.8 Abnormality Data - 피험자별 임상검사 비정상치 자료
+#16.2.8 AbNormal Indentity Data - 피험자별 임상검사 비정상치 자료
 LB0 <- as.data.frame(read_sas(paste0(data.path, "/", data.files[grepl("\\<lb\\>", data.files)]), NULL))
 subLB <- LB0 %>% 
       mutate(SID=SUBJID) %>% 
@@ -613,8 +613,8 @@ PE <- PE %>%
 data <- dcast(PE, SID ~ factor(time, levels = str_sort(unique(PE$time), numeric = T)), value.var = "PENOR") 
  
 
-data[data==1] <- "Normal"
-data[data==2] <- "Abnormal"
+data[data==1] <- "Normal Indent"
+data[data==2] <- "AbNormal Indent"
 data[is.na(data)] <- "NA"
 
 subPE <- merge(subid,data,by=c("SID")) %>% 
@@ -890,43 +890,48 @@ MyFTable_16.4.8.10 <- flex.table.fun(
 ##############################
 ###       Doc & Table      ###
 ##############################
+
+old <- set_flextable_defaults(font.family = "Times New Roman")
+do.call(set_flextable_defaults,old)
+
+doc <- read_docx(path = "C:/Users/Owner/Documents/GitHub/Template/Template.docx")
 doc <- body_add_par(doc, "Appendix", style = "heading 1") #1
 doc <- body_add_par(doc, "시험정보", style = "heading 2") #1.1
 doc <- body_add_par(doc, "임상시험 계획서", style = "heading 3") #1.1.1
-doc <- body_add_par(doc, "Refer to ISF", style = "normal")
+doc <- body_add_par(doc, "Refer to ISF", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "증례기록서 양식", style = "heading 3") #1.1.2
-doc <- body_add_par(doc, "Refer to ISF", style = "normal")
+doc <- body_add_par(doc, "Refer to ISF", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "임상시험 심사위원회의 명단 및 심사기록, 서면동의서와 동의를 위한 설명서 양식", style = "heading 3") #1.1.3
-doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
+doc <- body_add_par(doc, "Refer to ISF", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "시험책임자 및 담당자, 공동연구자의 명단 및 시험수행에 적합한 약력", style = "heading 3") #1.1.4
-doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
+doc <- body_add_par(doc, "Refer to ISF", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "시험책임자 및 공동연구자 또는 시험 의뢰자의 서명", style = "heading 3") #1.1.5
-doc <- body_add_par(doc, "Refer to section 1.2", style = "rTableLegend")
+doc <- body_add_par(doc, "Refer to section 1.2", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "2가지 이상의 batch에서 제조된 임상시험용의약품을 투여 받았을 경우 그 제조번호 목록 및 각 batch별 투여된 피험자의 명단", style = "heading 3") #1.1.6
-doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
+doc <- body_add_par(doc, "Not Applicable", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "무작위 배정 방법 및 배정표", style = "heading 3") #1.1.7
-doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
+doc <- body_add_par(doc, "Refer to ISF", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "점검확인서",  style = "heading 3") #1.1.8
-doc <- body_add_par(doc, "Refer to Audit Certificates", style = "rTableLegend")
+doc <- body_add_par(doc, "Refer to Audit Certificates", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "통계적 방법에 관한 문서", style = "heading 3") #1.1.9
-doc <- body_add_par(doc, "Refer to statistical analysis plan", style = "rTableLegend")
+doc <- body_add_par(doc, "Refer to statistical analysis plan", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "각 실시기관의 실험실간 표준화 방법, 기타 자료의 질적 보증을 위해 사용한 방법", style = "heading 3") #1.1.10
-doc <- body_add_par(doc, "Refer to ISF", style = "rTableLegend")
+doc <- body_add_par(doc, "Refer to ISF", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "임상시험결과를 출판하였을 경우 출판물", style = "heading 3") #1.1.11
-doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
+doc <- body_add_par(doc, "Not Applicable", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "임상시험결과의 평가에 절대적 영향을 미친 참고문헌", style = "heading 3") #1.1.12
-doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
+doc <- body_add_par(doc, "Not Applicable", style = "Normal Indent")
 doc <- body_add_break(doc)
 doc <- body_add_par(doc, "시험대상자 자료 목록", style = "heading 2") #1.2
 
@@ -934,12 +939,13 @@ doc <- body_add_par(doc, "중도탈락자", style = "heading 3")	#1.2.1
 doc <- body_add_flextable(doc, MyFTable_16.2.1)
 doc <- body_add_break(doc)
 
+
 doc <- body_add_par(doc, "시험계획서 이탈", style = "heading 3") #1.2.2
-doc <- body_add_par(doc, "Refer to section 10.2", style = "rTableLegend")
+doc <- body_add_par(doc, "Refer to section 10.2", style = "Normal Indent")
 doc <- body_add_break(doc)
 
 doc <- body_add_par(doc, "약동학 평가에서 제외된 시험대상자", style = "heading 3") #1.2.3
-doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
+doc <- body_add_par(doc, "Not Applicable", style = "Normal Indent")
 doc <- body_add_break(doc)
 
 doc <- body_add_par(doc, "시험대상자 특성표", style = "heading 3") #1.2.4
@@ -948,32 +954,32 @@ doc <- body_add_break(doc)
 
 doc <- body_end_section_continuous(doc) # 가로 시작
 doc <- body_add_par(doc, "순응도 및 혈중농도 자료", style = "heading 3") #1.2.5
-doc <- body_add_par(doc, "16.2.5.1 시험대상자별 개별 투약 시간", style="rTableLegend")
+doc <- body_add_par(doc, "16.2.5.1 시험대상자별 개별 투약 시간", style="Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.2.5.1)
 doc <- body_add_break(doc)
 doc <- body_end_section_landscape(doc) #가로 끝
 
-doc <- body_add_par(doc, "1.2.5.2 시험대상자별 혈장 내 농도 (Period 1 Tamsulosin)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.5.2 시험대상자별 혈장 내 농도 (Period 1 Tamsulosin)", style="Normal Indent")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "1.2.5.3 시험대상자별 혈장 내 농도 (Period 2 Mirabegron)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.5.3 시험대상자별 혈장 내 농도 (Period 2 Mirabegron)", style="Normal Indent")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "1.2.5.4 시험대상자별 혈장 내 농도 (Period 3 Tamsulosin)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.5.4 시험대상자별 혈장 내 농도 (Period 3 Tamsulosin)", style="Normal Indent")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "1.2.5.5 시험대상자별 혈장 내 농도 (Period 3 Mirabegron)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.5.5 시험대상자별 혈장 내 농도 (Period 3 Mirabegron)", style="Normal Indent")
 doc <- body_add_break(doc)
 ######################################
 doc <- body_add_par(doc, "시험대상자별 약동학 결과", style = "heading 3") #16.2.6
-doc <- body_add_par(doc, "1.2.6.1 시험대상자별 비구획 분석 결과 (Tamsulosin)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.6.1 시험대상자별 비구획 분석 결과 (Tamsulosin)", style="Normal Indent")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "1.2.6.2 시험대상자별 비구획 분석 결과 (Mirabegron)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.6.2 시험대상자별 비구획 분석 결과 (Mirabegron)", style="Normal Indent")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "1.2.6.3 시험대상자별 혈중농도 프로파일 (Tamsulosin)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.6.3 시험대상자별 혈중농도 프로파일 (Tamsulosin)", style="Normal Indent")
 doc <- body_add_break(doc)
-doc <- body_add_par(doc, "1.2.6.4 시험대상자별 혈중농도 프로파일 (Mirabegron)", style="rTableLegend")
+doc <- body_add_par(doc, "1.2.6.4 시험대상자별 혈중농도 프로파일 (Mirabegron)", style="Normal Indent")
 doc <- body_add_break(doc)
 
 doc <- body_end_section_continuous(doc) # 가로 시작
-doc <- body_add_par(doc, "1.2.6.5 시험대상자별 채혈수행시각", style="rTableLegend") #마리아 선생님께 받아야함
+doc <- body_add_par(doc, "1.2.6.5 시험대상자별 채혈수행시각", style="Normal Indent") #마리아 선생님께 받아야함
 doc <- body_add_flextable(doc, MyFTable_16.2.6.5.1)
 doc <- body_add_break(doc)
 doc <- body_add_flextable(doc, MyFTable_16.2.6.5.2)
@@ -992,9 +998,9 @@ doc <- body_add_break(doc)
 
 doc <- body_add_par(doc, "증례기록서", style = "heading 2") #1.3
 doc <- body_add_par(doc, "사망, 또는 다른 중대한 이상반응, 다른 유의성 있는 이상반응에 대한 증례기록서", style = "heading 3") #1.3.1
-doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
+doc <- body_add_par(doc, "Not Applicable", style = "Normal Indent")
 doc <- body_add_par(doc, "이외의 증례기록서", style = "heading 3") #1.3.2
-doc <- body_add_par(doc, "Not Applicable", style = "rTableLegend")
+doc <- body_add_par(doc, "Not Applicable", style = "Normal Indent")
 doc <- body_add_break(doc)
 
 doc <- body_end_section_continuous(doc) # 가로 시작
@@ -1006,175 +1012,175 @@ doc <- body_end_section_landscape(doc) #가로 끝
 
 
 doc <- body_add_par(doc, "실험실적 검사", style = "heading 3") 	#1.4.2
-doc <- body_add_par(doc, "16.4.2.1 혈액학 검사", style="heading3")
+doc <- body_add_par(doc, "16.4.2.1 혈액학 검사", style="heading 3")
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[1]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[1]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[1]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[2]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[2]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[2]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[3]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[3]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[3]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[4]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[4]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[4]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[5]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[5]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[5]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[6]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[6]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[6]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[7]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[7]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[7]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[8]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[8]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[8]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[9]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[9]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[9]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[10]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[10]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[10]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[11]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[11]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[11]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[12]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[12]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[12]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[13]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[13]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[13]])
 doc <- body_add_break(doc)
 #####
-# doc <- body_add_par(doc, "16.4.2.2 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.2 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[2]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.3 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.3 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[3]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.4 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.4 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[4]])
 # doc <- body_add_break(doc)
 # 
-# doc <- body_add_par(doc, "16.4.2.5 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.5 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[5]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.6 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.6 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[6]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.7 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.7 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[7]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.8 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.8 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[8]])
 # doc <- body_add_break(doc)
 # 
-# doc <- body_add_par(doc, "16.4.2.9 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.9 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[9]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.10 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.10 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[10]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.11 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.11 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[11]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.12 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.12 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[12]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.13 혈액학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.13 혈액학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[13]])
 # doc <- body_add_break(doc)
 #####
 
-doc <- body_add_par(doc, "1.4.2.2 혈액화학 검사", style="heading3")
+doc <- body_add_par(doc, "1.4.2.2 혈액화학 검사", style="heading 3")
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[14]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[14]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[14]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[15]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[15]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[15]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[16]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[16]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[16]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[17]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[17]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[17]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[18]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[18]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[18]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[19]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[19]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[19]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[20]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[20]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[20]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[21]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[21]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[21]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[22]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[22]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[22]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[23]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[23]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[23]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[24]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[24]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[24]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[25]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[25]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[25]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[26]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[26]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[26]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[27]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[27]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[27]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[28]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[28]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[28]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[29]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[29]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[29]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[30]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[30]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[30]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[31]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[31]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[31]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[32]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■",name_map1$AnalyteName[32]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[32]])
 doc <- body_add_break(doc)
 
@@ -1182,172 +1188,172 @@ doc <- body_add_break(doc)
 #####
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[14]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.15 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.15 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[15]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.16 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.16 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[16]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.17 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.17 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[17]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.18 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.18 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[18]])
 # doc <- body_add_break(doc)
 # 
-# doc <- body_add_par(doc, "16.4.2.19 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.19 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[19]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.20 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.20 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[20]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.21 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.21 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[21]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.22 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.22 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[22]])
 # doc <- body_add_break(doc)
 
 #doc <- body_end_section_continuous(doc) # 가로 시작
-# doc <- body_add_par(doc, "16.4.2.23 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.23 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[23]])
 # doc <- body_add_break(doc)
 #doc <- body_end_section_landscape(doc) #가로 끝
 
-# doc <- body_add_par(doc, "16.4.2.24 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.24 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[24]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.25 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.25 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[25]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.26 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.26 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[26]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.27 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.27 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[27]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.28 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.28 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[28]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.29 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.29 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[29]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.30 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.30 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[30]])
 # doc <- body_add_break(doc)
 # 
-# doc <- body_add_par(doc, "16.4.2.31 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.31 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[31]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.32 혈액화학 검사", style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.32 혈액화학 검사", style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[32]])
 # doc <- body_add_break(doc)
-#doc <- body_add_par(doc, "16.4.2.33 혈액화학 검사", style="rTableLegend")
+#doc <- body_add_par(doc, "16.4.2.33 혈액화학 검사", style="Normal Indent")
 #doc <- body_add_flextable(doc, MyFTable_16.4.2.1To16.4.2.33[[33]])
 #doc <- body_add_break(doc)
 #####
 
-doc <- body_add_par(doc, "16.4.2.3 뇨검사",style="heading3")
+doc <- body_add_par(doc, "16.4.2.3 뇨검사",style="heading 3")
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[1]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[1]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[1]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[2]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[2]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[2]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[3]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[3]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[3]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[4]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[4]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[4]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[5]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[5]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[5]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[6]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[6]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[6]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[7]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[7]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[7]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[8]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[8]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[8]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[9]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[9]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[9]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[10]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[10]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[10]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[11]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[11]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[11]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[12]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[12]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[12]])
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[13]), style = "rTableLegend")
+doc <- body_add_par(doc,paste0("■", name_map2$AnalyteName[13]), style = "Normal Indent")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[13]])
 doc <- body_add_break(doc)
 #####
-# doc <- body_add_par(doc, "16.4.2.35 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.35 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[2]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.36 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.36 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[3]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.37 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.37 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[4]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.38 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.38 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[5]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.39 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.39 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[6]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.40 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.40 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[7]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.41 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.41 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[8]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.42 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.42 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[9]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.43 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.43 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[10]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.44 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.44 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[11]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.45 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.45 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[12]])
 # doc <- body_add_break(doc)
-# doc <- body_add_par(doc, "16.4.2.46 뇨검사",style="rTableLegend")
+# doc <- body_add_par(doc, "16.4.2.46 뇨검사",style="Normal Indent")
 # doc <- body_add_flextable(doc, MyFTable_16.4.2.34To16.4.2.46[[13]])
 # doc <- body_add_break(doc)
 #####
 
-doc <- body_add_par(doc, "16.4.2.4 혈액응고검사",  style="heading3") 
+doc <- body_add_par(doc, "16.4.2.4 혈액응고검사",  style="heading 3") 
 doc <- body_add_flextable(doc, MyFTable_16.4.2.44)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.2.5 혈청검사",  style="heading3")
+doc <- body_add_par(doc, "16.4.2.5 혈청검사",  style="heading 3")
 doc <- body_add_flextable(doc, MyFTable_16.4.2.45)
 doc <- body_add_break(doc)
 
-#doc <- body_add_par(doc, "16.4.2.49 소변약물 검사",  style="heading3")
+#doc <- body_add_par(doc, "16.4.2.49 소변약물 검사",  style="heading 3")
 #doc <- body_add_flextable(doc, MyFTable_16.4.2.46)
 #doc <- body_add_break(doc)
 
@@ -1366,93 +1372,93 @@ doc <- body_add_flextable(doc, MyFTable_16.4.5)
 doc <- body_add_break(doc)
 
 doc <- body_add_par(doc, "활력 징후", style = "heading 3") # 16.4.6
-doc <- body_add_par(doc, "16.4.6.1 활력징후[SBP]", style="heading4")
+doc <- body_add_par(doc, "16.4.6.1 활력징후[SBP]", style="heading 4")
 doc <- body_add_flextable(doc, VS0.SYSBP)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.6.2 활력징후[DBP]", style="heading4")
+doc <- body_add_par(doc, "16.4.6.2 활력징후[DBP]", style="heading 4")
 doc <- body_add_flextable(doc, VS0.BPSYS)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.6.3 활력징후[PULSE]", style="heading4")
+doc <- body_add_par(doc, "16.4.6.3 활력징후[PULSE]", style="heading 4")
 doc <- body_add_flextable(doc, VS0.PL)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.6.4 활력징후[BODY TEMPERATURE]", style="heading4")
+doc <- body_add_par(doc, "16.4.6.4 활력징후[BODY TEMPERATURE]", style="heading 4")
 doc <- body_add_flextable(doc, VS0.TEMP)
 doc <- body_add_break(doc)
 doc <- body_end_section_landscape(doc) #끝
 
 doc <- body_add_par(doc, "12-Lead 심전도", style = "heading 3") # 16.4.7
-doc <- body_add_par(doc, "16.4.7.1 12-Lead 심전도[Ventricular rate]", style = "heading4") 
+doc <- body_add_par(doc, "16.4.7.1 12-Lead 심전도[Ventricular rate]", style = "heading 4") 
 doc <- body_add_flextable(doc, EGVR)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.2 12-Lead 심전도[PR Interval]", style = "heading4") 
+doc <- body_add_par(doc, "16.4.7.2 12-Lead 심전도[PR Interval]", style = "heading 4") 
 doc <- body_add_flextable(doc, EGPR)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.3 12-Lead 심전도[QRSD Interval]", style = "heading4") 
+doc <- body_add_par(doc, "16.4.7.3 12-Lead 심전도[QRSD Interval]", style = "heading 4") 
 doc <- body_add_flextable(doc, EGQRSD)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.4 12-Lead 심전도[QT Interval]", style = "heading4") 
+doc <- body_add_par(doc, "16.4.7.4 12-Lead 심전도[QT Interval]", style = "heading 4") 
 doc <- body_add_flextable(doc, EGQT)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.5 12-Lead 심전도[QTc Interval]", style = "heading4") 
+doc <- body_add_par(doc, "16.4.7.5 12-Lead 심전도[QTc Interval]", style = "heading 4") 
 doc <- body_add_flextable(doc, EGQTC)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.7.6 12-Lead 심전도[Over all]", style = "heading4") 
+doc <- body_add_par(doc, "16.4.7.6 12-Lead 심전도[Over all]", style = "heading 4") 
 doc <- body_add_flextable(doc, ECGNORM)
 doc <- body_add_break(doc)
 
 doc <- body_add_par(doc, "안과검사", style = "heading 3") # 16.4.8.1
-doc <- body_add_par(doc, "16.4.8.1 시력검사(OD)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.1 시력검사(OD)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.1)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.2 시력검사(OS)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.2 시력검사(OS)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.2)
 doc <- body_add_break(doc)
 
 doc <- body_end_section_continuous(doc) # 가로 시작
 
-doc <- body_add_par(doc, "16.4.8.3 안압검사(OD)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.3 안압검사(OD)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.3)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.4 안압검사(OS)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.4 안압검사(OS)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.4)
 doc <- body_add_break(doc)
 
 doc <- body_end_section_landscape(doc) #가로 끝
 
-doc <- body_add_par(doc, "16.4.8.5 눈물막 파괴 시간(OD)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.5 눈물막 파괴 시간(OD)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.5)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.6 눈물막 파괴 시간(OS)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.6 눈물막 파괴 시간(OS)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.6)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.7 쉬르머 검사(OD)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.7 쉬르머 검사(OD)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.7)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.8 쉬르머 검사(OS)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.8 쉬르머 검사(OS)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.8)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.9 세극등 검사(OD)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.9 세극등 검사(OD)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.9)
 doc <- body_add_break(doc)
 
-doc <- body_add_par(doc, "16.4.8.10 세극등 검사(OS)", style = "heading4") 
+doc <- body_add_par(doc, "16.4.8.10 세극등 검사(OS)", style = "heading 4") 
 doc <- body_add_flextable(doc, MyFTable_16.4.8.10)
 doc <- body_add_break(doc)
 
 
 appendix.name <- strsplit(getwd(), "/")[[1]][6]
-print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_APPENDIX_v4_20221006.docx"))
+print(doc, target = paste0(dirname(getwd()), "/", appendix.name, "/",appendix.name,"_Appendix_Test.docx"))
