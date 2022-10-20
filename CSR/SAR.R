@@ -213,3 +213,11 @@ table3 <-data.frame(table3)
 table3
 #write.csv(table1, "table3.csv")
 
+#### Table 9 ####
+#aeR<-c(11,24)
+#aeT<-c(9,26)
+#adrR<-c(12,23)
+#adrT<-c(12,23)
+#ae<-cbind(aeR,aeT)
+#adr<-cbind(adrR,adrT)
+#chisq.test(adr,correct = FALSE)
